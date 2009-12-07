@@ -483,7 +483,7 @@ exports.testScenarios = [
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3l14", "v3l15", "v3l17"],
 	},
 	{
-		name: "v3m16 true -> v3m20 false",
+		name: "v3m16 true",
 		appConfig: { canHandleResource: true, getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: false },
 		method: "DELETE",
 		path: "/",
@@ -491,6 +491,27 @@ exports.testScenarios = [
 		checkStatus: 202,
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b"],
 	},
+	{
+		name: "v3m20 false",
+		appConfig: { canHandleResource: true, getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: false },
+		method: "DELETE",
+		path: "/",
+		headers: { },
+		checkStatus: 202,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b"],
+	},
+	{
+		name: "v3m20 true",
+		appConfig: { canHandleResource: true, getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: true, responseEntityExists: false },
+		method: "DELETE",
+		path: "/",
+		headers: { },
+		checkStatus: 204,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b", "v3o20"],
+	},
+//	{//TODO
+//		name: "v3m16 false",
+//	}
 ];
 //"Fri, 28 Nov 1975 10:23:02 GMT"
 //"1975/11/28 5:23:02 AM"

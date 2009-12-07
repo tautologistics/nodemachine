@@ -346,8 +346,9 @@ function v3o18 (context) {
 }
 
 function v3o20 (context) {
-	context.res.sendBody("v3o20 reached");
-	//TODO
+	context.app.responseEntityExists(context, function v3o20_callback (result) {
+		HandleDecision(context, result, true, v3o18, 204);
+	});
 }
 
 function v3p3 (context) {
@@ -629,6 +630,10 @@ App.prototype.deleteResource = function App__deleteResource (req, callback) {
 
 App.prototype.deleteComplete = function App__deleteComplete (req, callback) {
 	callback(true);
+}
+
+App.prototype.responseEntityExists = function App__responseEntityExists (req, callback) {
+	callback(false);
 }
 
 App.prototype.isConflict = function App__isConflict (req, callback) {
