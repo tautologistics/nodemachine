@@ -265,7 +265,7 @@ function v3i13 (context) {
 
 function v3j18 (context) {
 	HandleDecision(context,
-		((context.req.method == 'GET') || (context.req.method == 'GET')),
+		((context.req.method == 'GET') || (context.req.method == 'HEAD')),
 		true, 304, 412);
 }
 
@@ -286,11 +286,7 @@ function v3l14 (context) {
 }
 
 function v3l15 (context) {
-	context.app.lastModified(context.req, function v3l15_callback (result) {
-		HandleDecision(context,
-			(result > new Date()),
-			true, v3m16, v3l17);
-	});
+	HandleDecision(context,	(Date.parse(context.req.headers['if-modified-since']) > new Date()), true, v3m16, v3l17);
 }
 
 function v3l17 (context) {
@@ -307,7 +303,13 @@ function v3m16 (context) {
 
 function v3m20 (context) {
 	context.app.deleteResource(context, function v3m20_callback (result) {
-		HandleDecision(context, result, true, 202, v3o20);
+		HandleDecision(context, result, true, v3m20b, 500);
+	});
+}
+
+function v3m20b (context) {
+	context.app.deleteComplete(context, function v3m20b_callback (result) {
+		HandleDecision(context, result, true, v3o20, 202);
 	});
 }
 
