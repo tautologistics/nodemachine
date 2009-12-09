@@ -82,6 +82,7 @@ function v3c3 (context) {
 }
 
 function v3c4 (context) {
+	//TODO: store select content-type in context.state["accept"]
 	var accepted = context.req.headers['accept'].split(/,\s*/);
 	var provided = context.app.contentTypesProvided();
 	var match = (provided.length == 0);
@@ -99,6 +100,7 @@ function v3d4 (context) {
 }
 
 function v3d5 (context) {
+	//TODO: store select content-type in context.state["accept-language"]
 	var accepted = context.req.headers['accept-language'].split(/,\s*/);
 	var provided = context.app.languagesProvided();
 	var match = (provided.length == 0);
@@ -116,6 +118,7 @@ function v3e5 (context) {
 }
 
 function v3e6 (context) {
+	//TODO: store select content-type in context.state["accept-charset"]
 	var accepted = context.req.headers['accept-charset'].split(/,\s*/);
 	var provided = context.app.charsetsProvided();
 	var match = (provided.length == 0);
@@ -133,6 +136,7 @@ function v3f6 (context) {
 }
 
 function v3f7 (context) {
+	//TODO: store select content-type in context.state["accept-encoding"]
 	var accepted = context.req.headers['accept-encoding'].split(/,\s*/);
 	var provided = context.app.encodingsProvided();
 	var match = (provided.length == 0);
@@ -321,7 +325,7 @@ function v3n16 (context) {
 	HandleDecision(context, (context.req.method == 'POST'), true, v3n11, v3o16);
 }
 
-function v3n11 (context) {
+function v3n11 (context) { //TODO
 	/*
 	 * 	if (post_is_create()) {
 	 * 		if (create_path() != null) {
@@ -336,9 +340,10 @@ function v3n11 (context) {
 	 * 		}
 	 * 	} else {
 	 * 		process_post()
+	 * 		encode_body_if_set()
 	 * 	}
 	 */
-	
+
 	context.app.postIsCreate(context.req, function v3l5_callback (result) {
 		if (result)
 			context.app.createPath(context.req, function v3l5b_callback (result) {
@@ -346,15 +351,17 @@ function v3n11 (context) {
 					context.res.setHeader("Location", result);
 				HandleDecision(context, (result != null), true, 303, 500);
 			});
-		else
-			HandleDecision(context, true, true, v3p11, v3p11);
+		else {
+			context.app.processPost(context, function (result) {
+				//TODO: encode_body_if_set()
+				HandleDecision(context, true, true, v3p11, v3p11);
+			});
+		}
 	});
 }
 
 function v3p11 (context) {
-	//if create_path() [state] then 201 else o20
-	context.res.sendBody("v3p11 reached");
-	//TODO
+	HandleDecision(context, (context.res.getHeader("Location") != null), true, 201, v3o20);
 }
 
 function v3o16 (context) {
@@ -363,15 +370,26 @@ function v3o16 (context) {
 
 function v3o14 (context) {
 	context.app.isConflict(context, function v3o14_callback (result) {
+		if (!result) {
+			//TODO: accept_helper()
+		}
 		HandleDecision(context, result, true, 409, v3p11);
 	});
 }
 
-function v3o18 (context) {
+function v3o18 (context) { //Generate body for GET/HEAD here
 	context.app.multipleChoices(context, function v3o18_callback (result) {
 		HandleDecision(context, result, true, 300, 200);
 		context.res.sendBody("resource here");
-		//TODO
+		if (context.req.method == "GET" || context.req.method == "HEAD") {
+			//TODO
+			//Generate ETag
+			//Generate Content-Type
+			//Generate Last-modified
+			//Generate Expires
+			//Get content-type from context.state and fetch resource
+			//Get encoding from context.state and encode body
+		}
 	});
 }
 
@@ -383,6 +401,7 @@ function v3o20 (context) {
 
 function v3p3 (context) {
 	context.app.isConflict(context, function v3p3_callback (result) {
+		//TODO: If not result accept_helper()
 		HandleDecision(context, result, true, 409, v3p11);
 	});
 }
@@ -390,16 +409,12 @@ function v3p3 (context) {
 function HandleDecision (context, result, expected, match, nomatch) {
 	var which = (result == expected) ? match : nomatch;
 	if ((typeof which) == "function") {
-		//if (context.trace)
-		//	sys.debug("[TRACE] " + which.name);
 		if (context.trace)
 			context.stack.push(which.name);
 		which(context);
 	} else if (which == parseInt(which)) {
 		context.res.status = which;
-		function finishFun (result) {
-			//if (context.trace)
-			//	sys.debug("Decision Stack: " + context.stack.join(', '));
+		context.app.resourceEtag(context, function (result) {
 			if (result)
 				context.res.setHeader("ETag", result)
 			if (context.trace)
@@ -409,28 +424,15 @@ function HandleDecision (context, result, expected, match, nomatch) {
 					context.res.setHeader("Expires", result.toUTCString());
 				context.res.finish();
 			});
-		}
-		if (which == 304)
-			context.app.resourceEtag(context, finishFun);
-		else
-			finishFun();
+		});
 	} else
 		throw new Exception("Unhandled result type for HandleDecision()");
 }
 
-function HandleRequest (server, req, res, trace) {
-//	sys.debug("HandleRequest(): " + req.uri.path);
-	
-	var context = new Context(server.mapApp(req.uri.path), req, res, trace);
-	
-	HandleDecision(context, true, true, v3b13, v3b13);
-
-	// var resource = (req.uri.path != '/') ? req.uri.path : '/index.html';
-	// res.status = 200;
-	// res.sendBody("Howdy!\n");
-	// res.sendBody(JSON.stringify(req.headers));
-	
-	//res.finish();
+function HandleRequest (server, req, res, trace) {	
+	HandleDecision(
+			new Context(server.mapApp(req.uri.path), req, res, trace),
+			true, true, v3b13, v3b13);
 }
 
 function Server (port, host, trace) {
@@ -478,39 +480,6 @@ function Context (app, req, res, trace) {
 
 function Response (res) {
 	this._res = res;
-	// for (var key in res) {
-	// 	var memberName = key;
-	// 	if ((typeof this._res[memberName]) == "function") {
-	// 		this[memberName] = function () { sys.debug("res." + memberName + "()"); return(this._res[memberName].apply(this._res, arguments)); }
-	// 	} else {
-	// 		this.__defineGetter__(memberName, function () { return(this._res[memberName]); });
-	// 		this.__defineSetter__(memberName, function (value) { this._res[memberName] = value; });
-	// 	}
-	// }
-
-	/*
-	DEBUG: output : object
-	DEBUG: outputEncodings : object
-	DEBUG: closeOnFinish : boolean
-	DEBUG: chunked_encoding : boolean
-	DEBUG: should_keep_alive : boolean
-	DEBUG: use_chunked_encoding_by_default : boolean
-	DEBUG: flushing : boolean
-	DEBUG: finished : boolean
-	DEBUG: _events : object
-	DEBUG: constructor : function
-	DEBUG: sendHeader : function
-	DEBUG: send : function
-	DEBUG: sendHeaderLines : function
-	DEBUG: sendBody : function
-	DEBUG: flush : function
-	DEBUG: finish : function
-	DEBUG: emit : function
-	DEBUG: addListener : function
-	DEBUG: removeListener : function
-	DEBUG: listeners : function
-	*/
-
 	this._status = 200
 	this._headers = {};
 	this._headersSent = false;
@@ -610,10 +579,6 @@ App.prototype.getOptions = function App__getOptions (req) {
 	return({});
 }
 
-App.prototype.knownContentType = function App__knownContentType (req, callback) {
-	//TODO: move to v3b5
-	callback(true);
-}
 App.prototype.contentTypesAccepted = function App__contentTypesAccepted (req) {
 	return([]);
 }
