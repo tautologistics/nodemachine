@@ -90,6 +90,7 @@ function v3c4 (context) {
 		var accept = accepted.shift().split(';')[0].toLowerCase();
 		match = ((accept == "*/*") || (provided.indexOf(accept) > -1));
 	}
+	//TODO: save selection to context
 	HandleDecision(context, match, true, v3d4, 406);
 }
 
@@ -106,6 +107,7 @@ function v3d5 (context) {
 		var accept = accepted.shift().split(';')[0].toLowerCase();
 		match = ((accept == "*") || (provided.indexOf(accept) > -1));
 	}
+	//TODO: save selection to context
 	HandleDecision(context, match, true, v3e5, 406);
 }
 
@@ -122,6 +124,7 @@ function v3e6 (context) {
 		var accept = accepted.shift().split(';')[0].toLowerCase();
 		match = ((accept == "*") || (provided.indexOf(accept) > -1));
 	}
+	//TODO: save selection to context
 	HandleDecision(context, match, true, v3f6, 406);
 }
 
@@ -138,6 +141,7 @@ function v3f7 (context) {
 		var accept = accepted.shift().split(';')[0].toLowerCase();
 		match = ((accept == "*") || (provided.indexOf(accept) > -1));
 	}
+	//TODO: save selection to context
 	HandleDecision(context, match, true, v3g7, 406);
 }
 
@@ -318,13 +322,39 @@ function v3n16 (context) {
 }
 
 function v3n11 (context) {
-	context.app.resourceLocationForPostChanged(context.req, function v3l5_callback (result) {
-		if (result) {
-			contest.setHeader("Location", result);
-			HandleDecision(context, true, true, 303, 303);
-		} else
+	/*
+	 * 	if (post_is_create()) {
+	 * 		if (create_path() != null) {
+	 * 			set_disp_path()
+	 * 			if (accept_helper()) {
+	 * 				if (resp_redirect()) {
+	 * 					"Location: " + 303
+	 * 				}
+	 * 			}
+	 * 		} else {
+	 * 			!error
+	 * 		}
+	 * 	} else {
+	 * 		process_post()
+	 * 	}
+	 */
+	
+	context.app.postIsCreate(context.req, function v3l5_callback (result) {
+		if (result)
+			context.app.createPath(context.req, function v3l5b_callback (result) {
+				if (result)
+					context.res.setHeader("Location", result);
+				HandleDecision(context, (result != null), true, 303, 500);
+			});
+		else
 			HandleDecision(context, true, true, v3p11, v3p11);
 	});
+}
+
+function v3p11 (context) {
+	//if create_path() [state] then 201 else o20
+	context.res.sendBody("v3p11 reached");
+	//TODO
 }
 
 function v3o16 (context) {
@@ -357,22 +387,33 @@ function v3p3 (context) {
 	});
 }
 
-function v3p11 (context) {
-	context.res.sendBody("v3p11 reached");
-	//TODO
-}
-
 function HandleDecision (context, result, expected, match, nomatch) {
 	var which = (result == expected) ? match : nomatch;
 	if ((typeof which) == "function") {
+		//if (context.trace)
+		//	sys.debug("[TRACE] " + which.name);
 		if (context.trace)
-//			sys.debug("[TRACE] " + which.name);
 			context.stack.push(which.name);
 		which(context);
 	} else if (which == parseInt(which)) {
 		context.res.status = which;
-//		sys.debug("Decision Stack: " + context.stack.join(', '));
-		context.res.setHeader('Decision-Stack', context.stack.join(', '));
+		function finishFun (result) {
+			//if (context.trace)
+			//	sys.debug("Decision Stack: " + context.stack.join(', '));
+			if (result)
+				context.res.setHeader("ETag", result)
+			if (context.trace)
+				context.res.setHeader('Decision-Stack', context.stack.join(', '));
+			context.app.resourceExpiration(context, function (result) {
+				if (result)
+					context.res.setHeader("Expires", result.toUTCString());
+				context.res.finish();
+			});
+		}
+		if (which == 304)
+			context.app.resourceEtag(context, finishFun);
+		else
+			finishFun();
 	} else
 		throw new Exception("Unhandled result type for HandleDecision()");
 }
@@ -389,7 +430,7 @@ function HandleRequest (server, req, res, trace) {
 	// res.sendBody("Howdy!\n");
 	// res.sendBody(JSON.stringify(req.headers));
 	
-	res.finish();
+	//res.finish();
 }
 
 function Server (port, host, trace) {
@@ -432,6 +473,7 @@ function Context (app, req, res, trace) {
 	this.app = app;
 	this.req = req;
 	this.res = res;
+	this.state = {};
 }
 
 function Response (res) {
@@ -504,6 +546,14 @@ Response.prototype.setHeader = function Response__setHeader (name, value) {
 	if (this._headersSent)
 		throw new Exception("Attempt to modify headers after headers sent to client");
 	this._headers[name] = value;
+}
+
+Response.prototype.getHeader = function Response__getHeader (name) {
+	return(this._headers[name]);
+}
+
+Response.prototype.delHeader = function Response__delHeader (name) {
+	return(delete this._headers[name]);
 }
 
 function App () {
@@ -620,11 +670,7 @@ App.prototype.allowMissingPost = function App__allowMissingPost (req, callback) 
 	callback(false);
 }
 
-App.prototype.resourceLocationForPostChanged = function App__resourceLocationForPostChanged (req, callback) {
-	callback(false);
-}
-
-App.prototype.deleteResource = function App__deleteResource (req, callback) {
+App.prototype.deleteResource = function App__deleteResource (req, callback) { //Deletion of resource occurs here
 	callback(false);
 }
 
@@ -648,7 +694,7 @@ App.prototype.createPath = function App__createPath (req, callback) {
 	callback(null);
 }
 
-App.prototype.processPost = function App__processPost (req, callback) {
+App.prototype.processPost = function App__processPost (req, callback) { //Handling of post data occurs here (and write body)
 	callback(false);
 }
 

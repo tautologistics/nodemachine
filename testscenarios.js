@@ -1,3 +1,5 @@
+var sys = require('sys');
+
 exports.testScenarios = [
 	{
 		name: "v3b13 false",
@@ -308,8 +310,17 @@ exports.testScenarios = [
 		checkStatus: 412,
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7"],
 	},
+	{
+		name: "v3h7 true",
+		appConfig: { canHandleResource: true, resourceExists: false },
+		method: "GET",
+		path: "/",
+		headers: { "If-match": "*" },
+		checkStatus: 412,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7"],
+	},
 //	{//TODO
-//		name: "v3h7",
+//		name: "v3h7 false",
 //	},
 	{
 		name: "v3g7 true",
@@ -492,6 +503,93 @@ exports.testScenarios = [
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b"],
 	},
 	{
+		name: "v3m16 false",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+	},
+	{
+		name: "v3n16 false",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+	},
+	{
+		name: "v3n16 true",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: true, createPath: '/items' },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 303,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3n11"],
+	},
+	{
+		name: "v3n11 true",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: true, createPath: '/items' },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 303,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3n11"],
+	},
+//	{//TODO
+//		name: "v3n11 false",
+//	},
+	{
+		name: "v3o16 false",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+	},
+	{
+		name: "v3o16 true",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['PUT'], isConflict: true },
+		method: "PUT",
+		path: "/",
+		headers: { },
+		checkStatus: 409,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o14"],
+	},
+	{
+		name: "v3o14 true",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['PUT'], isConflict: true },
+		method: "PUT",
+		path: "/",
+		headers: { },
+		checkStatus: 409,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o14"],
+	},
+//	{//TODO
+//	name: "v3o14 false",
+//},
+	{
+		name: "v3o18 false",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+	},
+	{
+		name: "v3o18 true",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, multipleChoices: true },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 300,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+	},
+	{
 		name: "v3m20 false",
 		appConfig: { canHandleResource: true, getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: false },
 		method: "DELETE",
@@ -501,7 +599,7 @@ exports.testScenarios = [
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b"],
 	},
 	{
-		name: "v3m20 true",
+		name: "v3o20 false",
 		appConfig: { canHandleResource: true, getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: true, responseEntityExists: false },
 		method: "DELETE",
 		path: "/",
@@ -509,9 +607,39 @@ exports.testScenarios = [
 		checkStatus: 204,
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b", "v3o20"],
 	},
-//	{//TODO
-//		name: "v3m16 false",
-//	}
+	{
+		name: "v3o20 true",
+		appConfig: { canHandleResource: true, getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: true, responseEntityExists: true },
+		method: "DELETE",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3m20", "v3m20b", "v3o20", "v3o18"],
+	},
+	{
+		name: "Send ETag",
+		appConfig: { canHandleResource: true, resourceEtag: "xxx" },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+		checkHeaders: function (headers) {
+			return(headers["etag"] == "xxx");
+		}
+	},
+	{
+		name: "Send Expires",
+		appConfig: { canHandleResource: true, resourceExpiration: new Date("Fri, 28 Nov 1975 10:23:02 GMT") },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 200,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3o16", "v3o18"],
+		checkHeaders: function (headers) {
+			return(headers["expires"] == "Fri, 28 Nov 1975 10:23:02 GMT");
+		}
+	},
 ];
 //"Fri, 28 Nov 1975 10:23:02 GMT"
 //"1975/11/28 5:23:02 AM"
