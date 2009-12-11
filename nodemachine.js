@@ -2,7 +2,7 @@ var sys = require("sys");
 var http = require("http");
 
 function v3b13 (context) {
-	context.app.serviceAvailable(context.req, function v3b13_callback (result) {
+	context.app.serviceAvailable(context, function v3b13_callback (result) {
 		HandleDecision(context, result, true, v3b12, 503);
 	})
 }
@@ -12,7 +12,7 @@ function v3b12 (context) {
 }
 
 function v3b11 (context) {
-	context.app.uriTooLong(context.req, function v3b11_callback (result) {
+	context.app.uriTooLong(context, function v3b11_callback (result) {
 		HandleDecision(context, result, false, v3b10, 414);
 	});
 }
@@ -26,13 +26,13 @@ function v3b10 (context) {
 }
 
 function v3b9 (context) {
-	context.app.malformedRequest(context.req, function v3b9_callback (result) {
+	context.app.malformedRequest(context, function v3b9_callback (result) {
 		HandleDecision(context, result, false, v3b8, 400);
 	});
 }
 
 function v3b8 (context) {
-	context.app.isAuthorized(context.req, function v3b8_callback (result) {
+	context.app.isAuthorized(context, function v3b8_callback (result) {
 		if (!result) {
 			context.res.setHeader("WWW-Authenticate", context.app.getAuthenticationHeader(context.req));
 			HandleDecision(context, true, true, 401, 401);
@@ -42,13 +42,13 @@ function v3b8 (context) {
 }
 
 function v3b7 (context) {
-	context.app.isForbidden(context.req, function v3b7_callback (result) {
+	context.app.isForbidden(context, function v3b7_callback (result) {
 		HandleDecision(context, result, false, v3b6, 403);
 	});
 }
 
 function v3b6 (context) {
-	context.app.validContentHeaders(context.req, function v3b6_callback (result) {
+	context.app.validContentHeaders(context, function v3b6_callback (result) {
 		HandleDecision(context, result, true, v3b5, 501);
 	});
 }
@@ -62,7 +62,7 @@ function v3b5 (context) {
 }
 
 function v3b4 (context) {
-	context.app.validEntityLength(context.req, function v3b4_callback (result) {
+	context.app.validEntityLength(context, function v3b4_callback (result) {
 		HandleDecision(context, result, true, v3b3, 413);
 	});
 }
@@ -170,7 +170,7 @@ function v3g7 (context) {
 	if (variances.length)
 		context.res.setHeader("Vary", variances.join(", "));
 
-	context.app.resourceExists(context.req, function v3g7_callback (result) {
+	context.app.resourceExists(context, function v3g7_callback (result) {
 		HandleDecision(context, result, true, v3g8, v3h7);
 	});
 }
@@ -184,7 +184,7 @@ function v3g9 (context) {
 }
 
 function v3g11 (context) {
-	context.app.resourceEtag(context.req, function v3g11_callback (result) {
+	context.app.resourceEtag(context, function v3g11_callback (result) {
 		HandleDecision(context,
 			(context.req.headers["if-match"].replace("\"", "") == result),
 			true, v3h10, 412);
@@ -200,7 +200,7 @@ function v3i7 (context) {
 }
 
 function v3i4 (context) {
-	context.app.movedPermanently(context.req, function v3i4_callback (result) {
+	context.app.movedPermanently(context, function v3i4_callback (result) {
 		if (result) {
 			context.setHeader("Location", result);
 			HandleDecision(context, true, true, 301, 301);
@@ -210,13 +210,13 @@ function v3i4 (context) {
 }
 
 function v3k7 (context) {
-	context.app.previouslyExisted(context.req, function v3k7_callback (result) {
+	context.app.previouslyExisted(context, function v3k7_callback (result) {
 		HandleDecision(context, result, true, v3k5, v3l7);
 	});
 }
 
 function v3k5 (context) {
-	context.app.movedPermanently(context.req, function v3k5_callback (result) {
+	context.app.movedPermanently(context, function v3k5_callback (result) {
 		if (result) {
 			context.setHeader("Location", result);
 			HandleDecision(context, true, true, 301, 301);
@@ -226,7 +226,7 @@ function v3k5 (context) {
 }
 
 function v3l5 (context) {
-	context.app.movedTemporarily(context.req, function v3l5_callback (result) {
+	context.app.movedTemporarily(context, function v3l5_callback (result) {
 		if (result) {
 			context.setHeader("Location", result);
 			HandleDecision(context, true, true, 307, 307);
@@ -264,7 +264,7 @@ function v3h11 (context) {
 }
 
 function v3h12 (context) {
-	context.app.lastModified(context.req, function v3h12_callback (result) {
+	context.app.resourceModified(context, function v3h12_callback (result) {
 		HandleDecision(context,
 			(result > Date.parse(context.req.headers["if-unmodified-since"])),
 			true, 412, v3i12);
@@ -286,7 +286,7 @@ function v3j18 (context) {
 }
 
 function v3k13 (context) {
-	context.app.resourceEtag(context.req, function v3k13_callback (result) {
+	context.app.resourceEtag(context, function v3k13_callback (result) {
 		HandleDecision(context,
 			(context.req.headers["if-none-match"].replace("\"", "") == result),
 			true, v3j18, v3l13);
@@ -306,7 +306,7 @@ function v3l15 (context) {
 }
 
 function v3l17 (context) {
-	context.app.lastModified(context.req, function v3l17_callback (result) {
+	context.app.resourceModified(context, function v3l17_callback (result) {
 		HandleDecision(context,
 			(result > Date.parse(context.req.headers["if-modified-since"])),
 			true, v3m16, 304);
@@ -334,7 +334,7 @@ function v3n16 (context) {
 }
 
 function v3n11 (context) {
-	context.app.postIsCreate(context.req, function v3n11_callback (result) {
+	context.app.postIsCreate(context, function v3n11_callback (result) {
 		if (result) {
 			context.app.createPath(context, function v3n11b_callback (result) {
 				if (result) {
@@ -392,7 +392,7 @@ function v3o18 (context) {
 			context.app.resourceExpiration(context, function v3o18b_callback (result) {
 				if (result)
 					context.res.setHeader("Expires", result.toUTCString());
-				context.app.lastModified(context, function v3o18c_callback (result) {
+				context.app.resourceModified(context, function v3o18c_callback (result) {
 					if (result)
 						context.res.setHeader("Last-Modified", result.toUTCString());
 					if (context.req.method == "GET")
@@ -500,6 +500,7 @@ function Response (res) {
 	this._status = 200
 	this._headers = {};
 	this._headersSent = false;
+	this._buffer = [];
 }
 
 Response.prototype.__defineGetter__("realResponse", function Response__getRealResponse () { return(this._res); });
@@ -512,8 +513,9 @@ Response.prototype.sendHeader = function Response__sendHeader (statusCode, heade
 }
 
 Response.prototype.sendBody = function Response__sendBody (chunk, encoding) {
-	this.sendHeaders();
-	return(this._res.sendBody(chunk, encoding));
+	//this.sendHeaders();
+	//return(this._res.sendBody(chunk, encoding));
+	this._buffer.push([chunk, encoding]);
 }
 
 Response.prototype.sendHeaders = function Response__sendHeaders () {
@@ -525,6 +527,9 @@ Response.prototype.sendHeaders = function Response__sendHeaders () {
 
 Response.prototype.finish = function Response__finish () {
 	this.sendHeaders();
+	this._buffer.forEach(function (element, index, array) {
+		this._res.sendBody(element[0], element[1]);
+	}, this);
 	return(this._res.finish());
 }
 
@@ -548,157 +553,157 @@ function App () {
 App.knownMethods = ["GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", "OPTIONS"]; //TODO: fix Node.js strictness on methods
 App.allowedMethods = ["GET", "HEAD"];
 
-App.prototype.canHandleResource = function App__canHandleResource (req) {
+App.prototype.canHandleResource = function App__canHandleResource (context) {
 	return(false);
 }
 
-App.prototype.serviceAvailable = function App__serviceAvailable (req, callback) {
+App.prototype.serviceAvailable = function App__serviceAvailable (context, callback) {
 	callback(true);
 }
 
-App.prototype.getKnownMethods = function App__getKnownMethods (req) {
+App.prototype.getKnownMethods = function App__getKnownMethods (context) {
 	return(App.knownMethods);
 }
 
-App.prototype.uriTooLong = function App__uriTooLong (req, callback) {
+App.prototype.uriTooLong = function App__uriTooLong (context, callback) {
 	callback(false);
 }
 
-App.prototype.getAllowedMethods = function App__getAllowedMethods (req) {
+App.prototype.getAllowedMethods = function App__getAllowedMethods (context) {
 	return(App.allowedMethods);
 }
 
-App.prototype.malformedRequest = function App__malformedRequest (req, callback) { //TODO: fix Node.js bail on malformed requests
+App.prototype.malformedRequest = function App__malformedRequest (context, callback) { //TODO: fix Node.js bail on malformed requests
 	callback(false);
 }
 
-App.prototype.isAuthorized = function App__isAuthorized (req, callback) {
+App.prototype.isAuthorized = function App__isAuthorized (context, callback) {
 	callback(true)
 }
 
-App.prototype.isForbidden = function App__isForbidden (req, callback) {
+App.prototype.isForbidden = function App__isForbidden (context, callback) {
 	callback(false);
 }
 
-App.prototype.getAuthenticationHeader = function App__getAuthenticationHeader (req) {
+App.prototype.getAuthenticationHeader = function App__getAuthenticationHeader (context) {
 	return("Basic realm=\"NodeMachine\"");
 }
 
-App.prototype.validContentHeaders = function App__validContentHeaders (req, callback) {
+App.prototype.validContentHeaders = function App__validContentHeaders (context, callback) {
 	callback(true);
 }
 
-App.prototype.validEntityLength = function App__validEntityLength (req, callback) {
+App.prototype.validEntityLength = function App__validEntityLength (context, callback) {
 	callback(true);
 }
 
-App.prototype.getOptions = function App__getOptions (req) {
+App.prototype.getOptions = function App__getOptions (context) {
 	return({});
 }
 
-App.prototype.contentTypesAccepted = function App__contentTypesAccepted (req) {
+App.prototype.contentTypesAccepted = function App__contentTypesAccepted (context) {
 	return([]);
 }
 
-App.prototype.contentTypesProvided = function App__contentTypesProvided (req) {
+App.prototype.contentTypesProvided = function App__contentTypesProvided (context) {
 	return([]);
 }
 
-App.prototype.languagesProvided = function App__languagesProvided (req) {
+App.prototype.languagesProvided = function App__languagesProvided (context) {
 	return([]);
 }
 
-App.prototype.charsetsProvided = function App__charsetsProvided (req) {
+App.prototype.charsetsProvided = function App__charsetsProvided (context) {
 	return([]);
 }
 
-App.prototype.encodingsProvided = function App__encodingsProvided (req) {
+App.prototype.encodingsProvided = function App__encodingsProvided (context) {
 	return([]);
 }
 
-App.prototype.getVariances = function App__getVariances (req) {
+App.prototype.getVariances = function App__getVariances (context) {
 	return([]);
 }
 
-App.prototype.resourceExists = function App__resourceExists (req, callback) {
+App.prototype.resourceExists = function App__resourceExists (context, callback) {
 	callback(true);
 }
 
-App.prototype.resourceEtag = function App__resourceEtag (req, callback) {
+App.prototype.resourceEtag = function App__resourceEtag (context, callback) {
 	callback(null);
 }
 
-App.prototype.lastModified = function App__lastModified (req, callback) {
+App.prototype.resourceModified = function App__resourceModified (context, callback) {
 	callback(null);
 }
 
-App.prototype.resourceExpiration = function App__resourceExpiration (req, callback) {
+App.prototype.resourceExpiration = function App__resourceExpiration (context, callback) {
 	callback(null);
 }
 
-App.prototype.movedPermanently = function App__movedPermanently (req, callback) {
+App.prototype.movedPermanently = function App__movedPermanently (context, callback) {
 	callback(false);
 }
 
-App.prototype.movedTemporarily = function App__movedTemporarily (req, callback) {
+App.prototype.movedTemporarily = function App__movedTemporarily (context, callback) {
 	callback(false);
 }
 
-App.prototype.previouslyExisted = function App__previouslyExisted (req, callback) {
+App.prototype.previouslyExisted = function App__previouslyExisted (context, callback) {
 	callback(false);
 }
 
-App.prototype.allowMissingPost = function App__allowMissingPost (req, callback) {
+App.prototype.allowMissingPost = function App__allowMissingPost (context, callback) {
 	callback(false);
 }
 
-App.prototype.deleteResource = function App__deleteResource (req, callback) { //Deletion of resource occurs here
+App.prototype.deleteResource = function App__deleteResource (context, callback) { //Deletion of resource occurs here
 	callback(false);
 }
 
-App.prototype.deleteComplete = function App__deleteComplete (req, callback) {
+App.prototype.deleteComplete = function App__deleteComplete (context, callback) {
 	callback(true);
 }
 
-App.prototype.responseEntityExists = function App__responseEntityExists (req, callback) {
+App.prototype.responseEntityExists = function App__responseEntityExists (context, callback) {
 	callback(false);
 }
 
-App.prototype.isConflict = function App__isConflict (req, callback) {
+App.prototype.isConflict = function App__isConflict (context, callback) {
 	callback(false);
 }
 
-App.prototype.postIsCreate = function App__postIsCreate (req, callback) {
+App.prototype.postIsCreate = function App__postIsCreate (context, callback) {
 	callback(false);
 }
 
-App.prototype.createPath = function App__createPath (req, callback) {
+App.prototype.createPath = function App__createPath (context, callback) {
 	callback(null);
 }
 
-App.prototype.acceptContent = function App__acceptContent (req, callback) { //Handling of post data occurs here (and write body)
+App.prototype.acceptContent = function App__acceptContent (context, callback) { //Handling of post data occurs here (and write body)
 	callback(false);
 }
 
-App.prototype.processPost = function App__processPost (req, callback) { //Handling of post data occurs here (and write body)
+App.prototype.processPost = function App__processPost (context, callback) { //Handling of post data occurs here (and write body)
 	callback(false);
 }
 
-App.prototype.getResource = function App__getResource (req, callback) { //Sending of contenet for GET occurs here
+App.prototype.getResource = function App__getResource (context, callback) { //Sending of contenet for GET occurs here
 	callback(false);
 }
 
-App.prototype.multipleChoices = function App__multipleChoices (req, callback) {
+App.prototype.multipleChoices = function App__multipleChoices (context, callback) {
 	callback(false);
 }
 
 function DefaultApp () {
 }
 sys.inherits(DefaultApp, App);
-DefaultApp.prototype.serviceAvailable = function DefaultApp__serviceAvailable (req, callback) {
+DefaultApp.prototype.serviceAvailable = function DefaultApp__serviceAvailable (context, callback) {
 	callback(false);
 }
-DefaultApp.prototype.canHandleResource = function DefaultApp__canHandleResource (req) {
+DefaultApp.prototype.canHandleResource = function DefaultApp__canHandleResource (context) {
 	return(true);
 }
 
