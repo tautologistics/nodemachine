@@ -105,7 +105,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3b5 true",
-		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT"], contentTypesAccepted: ["application/octet", "text/plain"], validEntityLength: false },
+		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT"], contentTypesAccepted: ["application/octet-stream", "text/plain"], validEntityLength: false },
 		method: "PUT",
 		path: "/",
 		headers: { "Content-type": "text/plain" },
@@ -114,7 +114,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3b5 true (*/*)",
-		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT"], contentTypesAccepted: ["application/octet", "*/*"], validEntityLength: false },
+		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT"], contentTypesAccepted: ["application/octet-stream", "*/*"], validEntityLength: false },
 		method: "PUT",
 		path: "/",
 		headers: { "Content-type": "text/plain" },
@@ -126,13 +126,13 @@ exports.testScenarios = [
 		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT"], contentTypesAccepted: [], validEntityLength: false },
 		method: "PUT",
 		path: "/",
-		headers: { "Content-type": "application/octet" },
+		headers: { "Content-type": "application/octet-stream" },
 		checkStatus: 413,
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4"],
 	},
 	{
 		name: "v3b5 true (no content-type)",
-		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT", "GET"], contentTypesAccepted: ["application/octet", "text/plain"], validEntityLength: false },
+		appConfig: { canHandleResource: true, getAllowedMethods: ["PUT", "GET"], contentTypesAccepted: ["application/octet-stream", "text/plain"], validEntityLength: false },
 		method: "PUT",
 		path: "/",
 		headers: {},

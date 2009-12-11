@@ -1,5 +1,5 @@
-var sys = require('sys');
-var http = require('http');
+var sys = require("sys");
+var http = require("http");
 
 function v3b13 (context) {
 	context.app.serviceAvailable(context.req, function v3b13_callback (result) {
@@ -19,7 +19,7 @@ function v3b11 (context) {
 
 function v3b10 (context) {
 	if (context.app.getAllowedMethods().indexOf(context.req.method.toUpperCase()) < 0) {
-		context.res.setHeader('Allow', context.app.getAllowedMethods(context.req).join(', '));
+		context.res.setHeader("Allow", context.app.getAllowedMethods(context.req).join(", "));
 		HandleDecision(context, true, true, 405, 405);
 	} else
 		HandleDecision(context, true, true, v3b9, v3b9);
@@ -34,7 +34,7 @@ function v3b9 (context) {
 function v3b8 (context) {
 	context.app.isAuthorized(context.req, function v3b8_callback (result) {
 		if (!result) {
-			context.res.setHeader('WWW-Authenticate', context.app.getAuthenticationHeader(context.req));
+			context.res.setHeader("WWW-Authenticate", context.app.getAuthenticationHeader(context.req));
 			HandleDecision(context, true, true, 401, 401);
 		} else
 			HandleDecision(context, true, true, v3b7, v3b7);
@@ -55,9 +55,9 @@ function v3b6 (context) {
 
 function v3b5 (context) {
 	var types = context.app.contentTypesAccepted();
-	var matched = ((context.req.headers['content-type'] == null) || (types.length == 0));
+	var matched = ((context.req.headers["content-type"] == null) || (types.length == 0));
 	for (var i = 0; !matched && i < types.length; i++)
-		matched = ((types[i] == "*/*") || (context.req.headers['content-type'] == types[i]));
+		matched = ((types[i] == "*/*") || (context.req.headers["content-type"] == types[i]));
 	HandleDecision(context, matched, true, v3b4, 415);
 }
 
@@ -68,7 +68,7 @@ function v3b4 (context) {
 }
 
 function v3b3 (context) {
-	if (context.req.method == 'OPTIONS') {
+	if (context.req.method == "OPTIONS") {
 		var headers = context.app.getOptions();
 		for (var key in headers)
 			context.res.setHeader(key, headers[key]);
@@ -78,89 +78,97 @@ function v3b3 (context) {
 }
 
 function v3c3 (context) {
-	HandleDecision(context, context.req.headers['accept'], null, v3d4, v3c4);
+	HandleDecision(context, context.req.headers["accept"], null, v3d4, v3c4);
 }
 
 function v3c4 (context) {
-	//TODO: store select content-type in context.state["accept"]
-	var accepted = context.req.headers['accept'].split(/,\s*/);
+	var accepted = context.req.headers["accept"].split(/,\s*/);
 	var provided = context.app.contentTypesProvided();
 	var match = (provided.length == 0);
+	if (match)
+		context.state['accept'] = accepted[0];
 	//TODO: sort using q values
 	while (!match && accepted.length) {
-		var accept = accepted.shift().split(';')[0].toLowerCase();
+		var accept = accepted.shift().split(/\s*;\s*/)[0].toLowerCase();
 		match = ((accept == "*/*") || (provided.indexOf(accept) > -1));
+		if (match)
+			context.state['accept'] = accept;
 	}
-	//TODO: save selection to context
 	HandleDecision(context, match, true, v3d4, 406);
 }
 
 function v3d4 (context) {
-	HandleDecision(context, context.req.headers['accept-language'], null, v3e5, v3d5);
+	HandleDecision(context, context.req.headers["accept-language"], null, v3e5, v3d5);
 }
 
 function v3d5 (context) {
-	//TODO: store select content-type in context.state["accept-language"]
-	var accepted = context.req.headers['accept-language'].split(/,\s*/);
+	var accepted = context.req.headers["accept-language"].split(/,\s*/);
 	var provided = context.app.languagesProvided();
 	var match = (provided.length == 0);
+	if (match)
+		context.state['accept-language'] = accepted[0];
 	//TODO: sort using q values
 	while (!match && accepted.length) {
-		var accept = accepted.shift().split(';')[0].toLowerCase();
+		var accept = accepted.shift().split(/\s*;\s*/)[0].toLowerCase();
 		match = ((accept == "*") || (provided.indexOf(accept) > -1));
+		if (match)
+			context.state['accept-language'] = accept;
 	}
-	//TODO: save selection to context
 	HandleDecision(context, match, true, v3e5, 406);
 }
 
 function v3e5 (context) {
-	HandleDecision(context, context.req.headers['accept-charset'], null, v3f6, v3e6);
+	HandleDecision(context, context.req.headers["accept-charset"], null, v3f6, v3e6);
 }
 
 function v3e6 (context) {
-	//TODO: store select content-type in context.state["accept-charset"]
-	var accepted = context.req.headers['accept-charset'].split(/,\s*/);
+	var accepted = context.req.headers["accept-charset"].split(/,\s*/);
 	var provided = context.app.charsetsProvided();
 	var match = (provided.length == 0);
+	if (match)
+		context.state['accept-charset'] = accepted[0];
 	//TODO: sort using q values
 	while (!match && accepted.length) {
-		var accept = accepted.shift().split(';')[0].toLowerCase();
+		var accept = accepted.shift().split(/\s*;\s*/)[0].toLowerCase();
 		match = ((accept == "*") || (provided.indexOf(accept) > -1));
+		if (match)
+			context.state['accept-charset'] = accept;
 	}
-	//TODO: save selection to context
 	HandleDecision(context, match, true, v3f6, 406);
 }
 
 function v3f6 (context) {
-	HandleDecision(context, context.req.headers['accept-encoding'], null, v3g7, v3f7);
+	HandleDecision(context, context.req.headers["accept-encoding"], null, v3g7, v3f7);
 }
 
 function v3f7 (context) {
-	//TODO: store select content-type in context.state["accept-encoding"]
-	var accepted = context.req.headers['accept-encoding'].split(/,\s*/);
+	var accepted = context.req.headers["accept-encoding"].split(/,\s*/);
 	var provided = context.app.encodingsProvided();
 	var match = (provided.length == 0);
+	if (match)
+		context.state['accept-encoding'] = accepted[0];
 	//TODO: sort using q values
 	while (!match && accepted.length) {
-		var accept = accepted.shift().split(';')[0].toLowerCase();
+		var accept = accepted.shift().split(/\s*;\s*/)[0].toLowerCase();
 		match = ((accept == "*") || (provided.indexOf(accept) > -1));
+		if (match)
+			context.state['accept-encoding'] = accept;
 	}
-	//TODO: save selection to context
 	HandleDecision(context, match, true, v3g7, 406);
 }
 
 function v3g7 (context) {
 	var variances = context.app.getVariances().splice(0);
 	if (context.app.contentTypesProvided().length)
-		variances.push('Accept');
+		variances.push("Accept");
 	if (context.app.languagesProvided().length)
-		variances.push('Accept-language');
+		variances.push("Accept-language");
 	if (context.app.charsetsProvided().length)
-		variances.push('Accept-charset');
+		variances.push("Accept-charset");
 	if (context.app.encodingsProvided().length)
-		variances.push('Accept-encoding');
+		variances.push("Accept-encoding");
 	if (variances.length)
-		context.res.setHeader('Vary', variances.join(', '));
+		context.res.setHeader("Vary", variances.join(", "));
 
 	context.app.resourceExists(context.req, function v3g7_callback (result) {
 		HandleDecision(context, result, true, v3g8, v3h7);
@@ -168,33 +176,33 @@ function v3g7 (context) {
 }
 
 function v3g8 (context) {
-	HandleDecision(context, context.req.headers['if-match'], null, v3h10, v3g9);
+	HandleDecision(context, context.req.headers["if-match"], null, v3h10, v3g9);
 }
 
 function v3g9 (context) {
-	HandleDecision(context, context.req.headers['if-match'], '*', v3h10, v3g11);
+	HandleDecision(context, context.req.headers["if-match"], "*", v3h10, v3g11);
 }
 
 function v3g11 (context) {
 	context.app.resourceEtag(context.req, function v3g11_callback (result) {
 		HandleDecision(context,
-			(context.req.headers['if-match'].replace('"', '') == result),
+			(context.req.headers["if-match"].replace("\"", "") == result),
 			true, v3h10, 412);
 	});
 }
 
 function v3h7 (context) {
-	HandleDecision(context, context.req.headers['if-match'], '*', 412, v3i7);
+	HandleDecision(context, context.req.headers["if-match"], "*", 412, v3i7);
 }
 
 function v3i7 (context) {
-	HandleDecision(context, (context.req.method == 'PUT'), true, v3i4, v3k7);
+	HandleDecision(context, (context.req.method == "PUT"), true, v3i4, v3k7);
 }
 
 function v3i4 (context) {
 	context.app.movedPermanently(context.req, function v3i4_callback (result) {
 		if (result) {
-			contest.setHeader("Location", result);
+			context.setHeader("Location", result);
 			HandleDecision(context, true, true, 301, 301);
 		} else
 			HandleDecision(context, true, true, v3p3, v3p3);
@@ -210,7 +218,7 @@ function v3k7 (context) {
 function v3k5 (context) {
 	context.app.movedPermanently(context.req, function v3k5_callback (result) {
 		if (result) {
-			contest.setHeader("Location", result);
+			context.setHeader("Location", result);
 			HandleDecision(context, true, true, 301, 301);
 		} else
 			HandleDecision(context, true, true, v3l5, v3l5);
@@ -220,7 +228,7 @@ function v3k5 (context) {
 function v3l5 (context) {
 	context.app.movedTemporarily(context.req, function v3l5_callback (result) {
 		if (result) {
-			contest.setHeader("Location", result);
+			context.setHeader("Location", result);
 			HandleDecision(context, true, true, 307, 307);
 		} else
 			HandleDecision(context, true, true, v3m5, v3m5);
@@ -228,11 +236,11 @@ function v3l5 (context) {
 }
 
 function v3l7 (context) {
-	HandleDecision(context, (context.req.method == 'POST'), true, v3m7, 404);
+	HandleDecision(context, (context.req.method == "POST"), true, v3m7, 404);
 }
 
 function v3m5 (context) {
-	HandleDecision(context, (context.req.method == 'POST'), true, v3n5, 410);
+	HandleDecision(context, (context.req.method == "POST"), true, v3n5, 410);
 }
 
 function v3m7 (context) {
@@ -248,65 +256,65 @@ function v3n5 (context) {
 }
 
 function v3h10 (context) {
-	HandleDecision(context, context.req.headers['if-unmodified-since'], null, v3i12, v3h11);
+	HandleDecision(context, context.req.headers["if-unmodified-since"], null, v3i12, v3h11);
 }
 
 function v3h11 (context) {
-	HandleDecision(context, (Date.parse(context.req.headers['if-unmodified-since']) > 0), true, v3h12, v3i12);
+	HandleDecision(context, (Date.parse(context.req.headers["if-unmodified-since"]) > 0), true, v3h12, v3i12);
 }
 
 function v3h12 (context) {
 	context.app.lastModified(context.req, function v3h12_callback (result) {
 		HandleDecision(context,
-			(result > Date.parse(context.req.headers['if-unmodified-since'])),
+			(result > Date.parse(context.req.headers["if-unmodified-since"])),
 			true, 412, v3i12);
 	});
 }
 
 function v3i12 (context) {
-	HandleDecision(context, context.req.headers['if-none-match'], null, v3l13, v3i13);
+	HandleDecision(context, context.req.headers["if-none-match"], null, v3l13, v3i13);
 }
 
 function v3i13 (context) {
-	HandleDecision(context, context.req.headers['if-none-match'], '*', v3j18, v3k13);
+	HandleDecision(context, context.req.headers["if-none-match"], "*", v3j18, v3k13);
 }
 
 function v3j18 (context) {
 	HandleDecision(context,
-		((context.req.method == 'GET') || (context.req.method == 'HEAD')),
+		((context.req.method == "GET") || (context.req.method == "HEAD")),
 		true, 304, 412);
 }
 
 function v3k13 (context) {
 	context.app.resourceEtag(context.req, function v3k13_callback (result) {
 		HandleDecision(context,
-			(context.req.headers['if-none-match'].replace('"', '') == result),
+			(context.req.headers["if-none-match"].replace("\"", "") == result),
 			true, v3j18, v3l13);
 	});
 }
 
 function v3l13 (context) {
-	HandleDecision(context, context.req.headers['if-modified-since'], null, v3m16, v3l14);
+	HandleDecision(context, context.req.headers["if-modified-since"], null, v3m16, v3l14);
 }
 
 function v3l14 (context) {
-	HandleDecision(context, (Date.parse(context.req.headers['if-modified-since']) > 0), true, v3l15, v3m16);
+	HandleDecision(context, (Date.parse(context.req.headers["if-modified-since"]) > 0), true, v3l15, v3m16);
 }
 
 function v3l15 (context) {
-	HandleDecision(context,	(Date.parse(context.req.headers['if-modified-since']) > new Date()), true, v3m16, v3l17);
+	HandleDecision(context,	(Date.parse(context.req.headers["if-modified-since"]) > new Date()), true, v3m16, v3l17);
 }
 
 function v3l17 (context) {
 	context.app.lastModified(context.req, function v3l17_callback (result) {
 		HandleDecision(context,
-			(result > Date.parse(context.req.headers['if-modified-since'])),
+			(result > Date.parse(context.req.headers["if-modified-since"])),
 			true, v3m16, 304);
 	});
 }
 
 function v3m16 (context) {
-	HandleDecision(context, (context.req.method == 'DELETE'), true, v3m20, v3n16);
+	HandleDecision(context, (context.req.method == "DELETE"), true, v3m20, v3n16);
 }
 
 function v3m20 (context) {
@@ -322,39 +330,33 @@ function v3m20b (context) {
 }
 
 function v3n16 (context) {
-	HandleDecision(context, (context.req.method == 'POST'), true, v3n11, v3o16);
+	HandleDecision(context, (context.req.method == "POST"), true, v3n11, v3o16);
 }
 
-function v3n11 (context) { //TODO
-	/*
-	 * 	if (post_is_create()) {
-	 * 		if (create_path() != null) {
-	 * 			set_disp_path()
-	 * 			if (accept_helper()) {
-	 * 				if (resp_redirect()) {
-	 * 					"Location: " + 303
-	 * 				}
-	 * 			}
-	 * 		} else {
-	 * 			!error
-	 * 		}
-	 * 	} else {
-	 * 		process_post()
-	 * 		encode_body_if_set()
-	 * 	}
-	 */
-
-	context.app.postIsCreate(context.req, function v3l5_callback (result) {
-		if (result)
-			context.app.createPath(context.req, function v3l5b_callback (result) {
-				if (result)
-					context.res.setHeader("Location", result);
-				HandleDecision(context, (result != null), true, 303, 500);
+function v3n11 (context) {
+	context.app.postIsCreate(context.req, function v3n11_callback (result) {
+		if (result) {
+			context.app.createPath(context, function v3n11b_callback (result) {
+				if (result) {
+					//TODO: will this work or do we need to wrap the request?
+					context.req.path = result;
+					context.app.acceptContent(context, function v3n11c_callback (result) {
+						if (result) {
+							//TODO: encode_body_if_set()
+							HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+						} else
+							HandleDecision(context, true, true, 500, 500);
+					});
+				} else
+					HandleDecision(context, true, true, 500, 500);
 			});
-		else {
-			context.app.processPost(context, function (result) {
-				//TODO: encode_body_if_set()
-				HandleDecision(context, true, true, v3p11, v3p11);
+		} else {
+			context.app.processPost(context, function v3n11d_callback (result) {
+				if (result) {
+					//TODO: encode_body_if_set()
+					HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+				} else
+					HandleDecision(context, true, true, 500, 500);
 			});
 		}
 	});
@@ -365,32 +367,48 @@ function v3p11 (context) {
 }
 
 function v3o16 (context) {
-	HandleDecision(context, (context.req.method == 'PUT'), true, v3o14, v3o18);
+	HandleDecision(context, (context.req.method == "PUT"), true, v3o14, v3o18);
 }
 
 function v3o14 (context) {
 	context.app.isConflict(context, function v3o14_callback (result) {
 		if (!result) {
-			//TODO: accept_helper()
-		}
-		HandleDecision(context, result, true, 409, v3p11);
+			context.app.acceptContent(context, function v3o14b_callback (result) {
+				//TODO: if (result) encode_body_if_set()
+				HandleDecision(context, result, true, v3p11, 500);
+			});
+		} else
+			HandleDecision(context, true, true, 409, 409);
 	});
 }
 
-function v3o18 (context) { //Generate body for GET/HEAD here
-	context.app.multipleChoices(context, function v3o18_callback (result) {
-		HandleDecision(context, result, true, 300, 200);
-		context.res.sendBody("resource here");
-		if (context.req.method == "GET" || context.req.method == "HEAD") {
-			//TODO
-			//Generate ETag
-			//Generate Content-Type
-			//Generate Last-modified
-			//Generate Expires
-			//Get content-type from context.state and fetch resource
-			//Get encoding from context.state and encode body
-		}
-	});
+function v3o18 (context) {
+	if (context.req.method == "GET" || context.req.method == "HEAD") {
+		if (context.state["content-type"])
+			context.res.setHeader("Content-Type", context.state["content-type"]);
+		context.app.resourceEtag(context, function v3o18_callback (result) {
+			if (result)
+				context.res.setHeader("ETag", result)
+			context.app.resourceExpiration(context, function v3o18b_callback (result) {
+				if (result)
+					context.res.setHeader("Expires", result.toUTCString());
+				context.app.lastModified(context, function v3o18c_callback (result) {
+					if (result)
+						context.res.setHeader("Last-Modified", result.toUTCString());
+					if (context.req.method == "GET")
+						context.app.getResource(context, function v3o18d_callback (result) {
+							context.app.multipleChoices(context, function v3o18e_callback (result) {
+								//TODO: encode_body_if_set()
+								HandleDecision(context, result, true, 300, 200);
+							});
+						});
+				});
+			});
+		});
+	} else
+		context.app.multipleChoices(context, function v3o18_callback (result) {
+			HandleDecision(context, result, true, 300, 200);
+		});
 }
 
 function v3o20 (context) {
@@ -401,8 +419,13 @@ function v3o20 (context) {
 
 function v3p3 (context) {
 	context.app.isConflict(context, function v3p3_callback (result) {
-		//TODO: If not result accept_helper()
-		HandleDecision(context, result, true, 409, v3p11);
+		if (!result) {
+			context.app.acceptContent(context, function v3p3b_callback (result) {
+				//TODO: if (result) encode_body_if_set()
+				HandleDecision(context, result, true, v3p11, 500);
+			});
+		} else
+			HandleDecision(context, true, true, 409, 409);
 	});
 }
 
@@ -413,18 +436,12 @@ function HandleDecision (context, result, expected, match, nomatch) {
 			context.stack.push(which.name);
 		which(context);
 	} else if (which == parseInt(which)) {
+		//TODO: allow message to be included with status results
 		context.res.status = which;
-		context.app.resourceEtag(context, function (result) {
-			if (result)
-				context.res.setHeader("ETag", result)
-			if (context.trace)
-				context.res.setHeader('Decision-Stack', context.stack.join(', '));
-			context.app.resourceExpiration(context, function (result) {
-				if (result)
-					context.res.setHeader("Expires", result.toUTCString());
-				context.res.finish();
-			});
-		});
+		if (context.trace)
+			context.res.setHeader("Decision-Stack", context.stack.join(", "));
+		//TODO: implement isStreamable() to defer res.finish();
+		context.res.finish();
 	} else
 		throw new Exception("Unhandled result type for HandleDecision()");
 }
@@ -528,8 +545,8 @@ Response.prototype.delHeader = function Response__delHeader (name) {
 function App () {
 }
 
-App.knownMethods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'CONNECT', 'OPTIONS']; //TODO: fix Node.js strictness on methods
-App.allowedMethods = ['GET', 'HEAD'];
+App.knownMethods = ["GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", "OPTIONS"]; //TODO: fix Node.js strictness on methods
+App.allowedMethods = ["GET", "HEAD"];
 
 App.prototype.canHandleResource = function App__canHandleResource (req) {
 	return(false);
@@ -659,7 +676,15 @@ App.prototype.createPath = function App__createPath (req, callback) {
 	callback(null);
 }
 
+App.prototype.acceptContent = function App__acceptContent (req, callback) { //Handling of post data occurs here (and write body)
+	callback(false);
+}
+
 App.prototype.processPost = function App__processPost (req, callback) { //Handling of post data occurs here (and write body)
+	callback(false);
+}
+
+App.prototype.getResource = function App__getResource (req, callback) { //Sending of contenet for GET occurs here
 	callback(false);
 }
 
