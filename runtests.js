@@ -51,8 +51,8 @@ function runTest(currentTest) {
 	}
 
 	var testScenario = testScenarios[currentTest];
-	var request = testClient[testScenario.method.toLowerCase()](testScenario.path, testScenario.headers);
-//	var request = testClient.fetch(testScenario.method.toUpperCase(), testScenario.path, testScenario.headers);
+//	var request = testClient[testScenario.method.toLowerCase()](testScenario.path, testScenario.headers);
+	var request = testClient.request(testScenario.method.toUpperCase(), testScenario.path, testScenario.headers);
 	server.clearApps();
 	server.addApp(new TestApp(testScenario.appConfig));
 	
