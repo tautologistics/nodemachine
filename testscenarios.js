@@ -342,7 +342,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3g9 true",
-		appConfig: { canHandleResource: true, resourceExists: true, lastModified: new Date("2009/11/28 5:23:02 AM") },
+		appConfig: { canHandleResource: true, resourceExists: true, resourceModified: new Date("2009/11/28 5:23:02 AM") },
 		method: "GET",
 		path: "/",
 		headers: { "If-match": "*", "If-Unmodified-Since": "Fri, 28 Nov 1975 10:23:02 GMT" },
@@ -360,7 +360,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3g11 true",
-		appConfig: { canHandleResource: true, resourceExists: true, resourceEtag: "xxx", lastModified: new Date("2009/11/28 5:23:02 AM") },
+		appConfig: { canHandleResource: true, resourceExists: true, resourceEtag: "xxx", resourceModified: new Date("2009/11/28 5:23:02 AM") },
 		method: "GET",
 		path: "/",
 		headers: { "If-match": "xxx", "If-Unmodified-Since": "Fri, 28 Nov 1975 10:23:02 GMT" },
@@ -378,7 +378,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3h12 true",
-		appConfig: { canHandleResource: true, resourceExists: true, resourceEtag: "xxx", lastModified: new Date("2009/11/28 5:23:02 AM") },
+		appConfig: { canHandleResource: true, resourceExists: true, resourceEtag: "xxx", resourceModified: new Date("2009/11/28 5:23:02 AM") },
 		method: "GET",
 		path: "/",
 		headers: { "If-match": "xxx", "If-Unmodified-Since": "Fri, 28 Nov 1975 10:23:02 GMT" },
@@ -387,7 +387,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3h12 false",
-		appConfig: { canHandleResource: true, lastModified: new Date("1975/11/28 5:23:02 AM") },
+		appConfig: { canHandleResource: true, resourceModified: new Date("1975/11/28 5:23:02 AM") },
 		method: "GET",
 		path: "/",
 		headers: { "If-Unmodified-Since": "Sat, 28 Nov 2009 10:23:02 GMT", "If-None-Match": "*" },
@@ -450,7 +450,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3k13 false",
-		appConfig: { canHandleResource: true, resourceEtag: "yyy", lastModified: new Date("1975/11/28 5:23:02 AM") },
+		appConfig: { canHandleResource: true, resourceEtag: "yyy", resourceModified: new Date("1975/11/28 5:23:02 AM") },
 		method: "GET",
 		path: "/",
 		headers: { "If-None-Match": "xxx", "If-Modified-Since": "Sat, 28 Nov 2009 10:23:02 GMT" },
@@ -477,7 +477,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3l17 true",
-		appConfig: { canHandleResource: true, lastModified: new Date("2009/11/28 5:23:02 AM"), getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: false },
+		appConfig: { canHandleResource: true, resourceModified: new Date("2009/11/28 5:23:02 AM"), getAllowedMethods: ['DELETE'], deleteResource: true, deleteComplete: false },
 		method: "DELETE",
 		path: "/",
 		headers: { "If-Modified-Since": "Fri, 28 Nov 1975 10:23:02 GMT" },
@@ -486,7 +486,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3l17 false",
-		appConfig: { canHandleResource: true, lastModified: new Date("1975/11/28 5:23:02 AM") },
+		appConfig: { canHandleResource: true, resourceModified: new Date("1975/11/28 5:23:02 AM") },
 		method: "GET",
 		path: "/",
 		headers: { "If-Modified-Since": "Sat, 28 Nov 2009 10:23:02 GMT" },
@@ -522,7 +522,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3n16 true",
-		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: true, createPath: '/items' },
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], processPost: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
 		method: "POST",
 		path: "/",
 		headers: { },
@@ -531,7 +531,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3n11 true",
-		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: true, createPath: '/items' },
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], processPost: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
 		method: "POST",
 		path: "/",
 		headers: { },
