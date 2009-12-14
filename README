@@ -1,3 +1,12 @@
 This is a port of WebMachine, a restful framework for the erlang web server Mochiweb.
 Explanation of WebMachine: http://bitbucket.org/justin/webmachine/wiki/WebmachineMechanics
 HTTP Decision graph: http://bitbucket.org/justin/webmachine/wiki/BigHTTPGraph
+
+To test:
+
+  node runtests.js
+
+To run example server:
+
+  node example01.js
+
