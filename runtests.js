@@ -29,7 +29,7 @@ for (var key in nodemachine.App.prototype) {
 			return(function () {
 				if (this._overrides[name] != null)
 					if (arguments.length == 2)
-						return(arguments[1](((typeof this._overrides[name]) != "function") ? this._overrides[name] : this._overrides[name](arguments[0])));
+						return(arguments[1](arguments[0], ((typeof this._overrides[name]) != "function") ? this._overrides[name] : this._overrides[name](arguments[0])));
 					else
 						return(((typeof this._overrides[name]) != "function") ? this._overrides[name] : this._overrides[name](arguments[0]));
 				return(origFun.apply(this, arguments));
@@ -51,7 +51,6 @@ function runTest(currentTest) {
 	}
 
 	var testScenario = testScenarios[currentTest];
-//	var request = testClient[testScenario.method.toLowerCase()](testScenario.path, testScenario.headers);
 	var request = testClient.request(testScenario.method.toUpperCase(), testScenario.path, testScenario.headers);
 	server.clearApps();
 	server.addApp(new TestApp(testScenario.appConfig));

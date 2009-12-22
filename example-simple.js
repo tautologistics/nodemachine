@@ -12,22 +12,22 @@ MyApp.prototype.canHandleResource = function MyApp__canHandleResource (context) 
 	return(true);
 }
 MyApp.prototype.resourceExists = function MyApp__resourceExists (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 MyApp.prototype.resourceEtag = function MyApp__resourceEtag (context, callback) {
-	callback("ajksdhasjhdgajsghdjhags");
+	callback(context, "ajksdhasjhdgajsghdjhags");
 }
 MyApp.prototype.resourceModified = function MyApp__resourceModified (context, callback) {
-	callback(new Date());
+	callback(context, new Date());
 }
 MyApp.prototype.resourceExpiration = function MyApp__resourceExpiration (context, callback) {
 	var exp = new Date();
 	exp.setTime(exp.getTime() + 3600000);
-	callback(exp);
+	callback(context, exp);
 }
 MyApp.prototype.getResource = function MyApp__getResource (context, callback) {
 	context.res.sendBody("This is the content");
-	callback(true);
+	callback(context, true);
 }
 
 var server = nodemachine.createServer(8080);

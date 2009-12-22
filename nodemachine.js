@@ -2,9 +2,10 @@ var sys = require("sys");
 var http = require("http");
 
 function v3b13 (context) {
-	context.app.serviceAvailable(context, function v3b13_callback (result) {
-		HandleDecision(context, result, true, v3b12, 503);
-	})
+	context.app.serviceAvailable(context, v3b13_callback)
+}
+function v3b13_callback (context, result) {
+	HandleDecision(context, result, true, v3b12, 503);
 }
 
 function v3b12 (context) {
@@ -12,9 +13,10 @@ function v3b12 (context) {
 }
 
 function v3b11 (context) {
-	context.app.uriTooLong(context, function v3b11_callback (result) {
-		HandleDecision(context, result, false, v3b10, 414);
-	});
+	context.app.uriTooLong(context, v3b11_callback);
+}
+function v3b11_callback (context, result) {
+	HandleDecision(context, result, false, v3b10, 414);
 }
 
 function v3b10 (context) {
@@ -26,31 +28,35 @@ function v3b10 (context) {
 }
 
 function v3b9 (context) {
-	context.app.malformedRequest(context, function v3b9_callback (result) {
-		HandleDecision(context, result, false, v3b8, 400);
-	});
+	context.app.malformedRequest(context, v3b9_callback);
+}
+function v3b9_callback (context, result) {
+	HandleDecision(context, result, false, v3b8, 400);
 }
 
 function v3b8 (context) {
-	context.app.isAuthorized(context, function v3b8_callback (result) {
-		if (!result) {
-			context.res.setHeader("WWW-Authenticate", context.app.getAuthenticationHeader(context.req));
-			HandleDecision(context, true, true, 401, 401);
-		} else
-			HandleDecision(context, true, true, v3b7, v3b7);
-	});
+	context.app.isAuthorized(context, v3b8_callback);
+}
+function v3b8_callback (context, result) {
+	if (!result) {
+		context.res.setHeader("WWW-Authenticate", context.app.getAuthenticationHeader(context.req));
+		HandleDecision(context, true, true, 401, 401);
+	} else
+		HandleDecision(context, true, true, v3b7, v3b7);
 }
 
 function v3b7 (context) {
-	context.app.isForbidden(context, function v3b7_callback (result) {
-		HandleDecision(context, result, false, v3b6, 403);
-	});
+	context.app.isForbidden(context, v3b7_callback);
+}
+function v3b7_callback (context, result) {
+	HandleDecision(context, result, false, v3b6, 403);
 }
 
 function v3b6 (context) {
-	context.app.validContentHeaders(context, function v3b6_callback (result) {
-		HandleDecision(context, result, true, v3b5, 501);
-	});
+	context.app.validContentHeaders(context, v3b6_callback);
+}
+function v3b6_callback (context, result) {
+	HandleDecision(context, result, true, v3b5, 501);
 }
 
 function v3b5 (context) {
@@ -62,9 +68,10 @@ function v3b5 (context) {
 }
 
 function v3b4 (context) {
-	context.app.validEntityLength(context, function v3b4_callback (result) {
-		HandleDecision(context, result, true, v3b3, 413);
-	});
+	context.app.validEntityLength(context, v3b4_callback);
+}
+function v3b4_callback (context, result) {
+	HandleDecision(context, result, true, v3b3, 413);
 }
 
 function v3b3 (context) {
@@ -170,9 +177,10 @@ function v3g7 (context) {
 	if (variances.length)
 		context.res.setHeader("Vary", variances.join(", "));
 
-	context.app.resourceExists(context, function v3g7_callback (result) {
-		HandleDecision(context, result, true, v3g8, v3h7);
-	});
+	context.app.resourceExists(context, v3g7_callback);
+}
+function v3g7_callback (context, result) {
+	HandleDecision(context, result, true, v3g8, v3h7);
 }
 
 function v3g8 (context) {
@@ -184,11 +192,12 @@ function v3g9 (context) {
 }
 
 function v3g11 (context) {
-	context.app.resourceEtag(context, function v3g11_callback (result) {
-		HandleDecision(context,
-			(context.req.headers["if-match"].replace("\"", "") == result),
-			true, v3h10, 412);
-	});
+	context.app.resourceEtag(context, v3g11_callback);
+}
+function v3g11_callback (context, result) {
+	HandleDecision(context,
+		(context.req.headers["if-match"].replace("\"", "") == result),
+		true, v3h10, 412);
 }
 
 function v3h7 (context) {
@@ -200,39 +209,43 @@ function v3i7 (context) {
 }
 
 function v3i4 (context) {
-	context.app.movedPermanently(context, function v3i4_callback (result) {
-		if (result) {
-			context.setHeader("Location", result);
-			HandleDecision(context, true, true, 301, 301);
-		} else
-			HandleDecision(context, true, true, v3p3, v3p3);
-	});
+	context.app.movedPermanently(context, v3i4_callback);
+}
+function v3i4_callback (context, result) {
+	if (result) {
+		context.setHeader("Location", result);
+		HandleDecision(context, true, true, 301, 301);
+	} else
+		HandleDecision(context, true, true, v3p3, v3p3);
 }
 
 function v3k7 (context) {
-	context.app.previouslyExisted(context, function v3k7_callback (result) {
-		HandleDecision(context, result, true, v3k5, v3l7);
-	});
+	context.app.previouslyExisted(context, v3k7_callback);
+}
+function v3k7_callback (context, result) {
+	HandleDecision(context, result, true, v3k5, v3l7);
 }
 
 function v3k5 (context) {
-	context.app.movedPermanently(context, function v3k5_callback (result) {
-		if (result) {
-			context.setHeader("Location", result);
-			HandleDecision(context, true, true, 301, 301);
-		} else
-			HandleDecision(context, true, true, v3l5, v3l5);
-	});
+	context.app.movedPermanently(context, v3k5_callback);
+}
+function v3k5_callback (context, result) {
+	if (result) {
+		context.setHeader("Location", result);
+		HandleDecision(context, true, true, 301, 301);
+	} else
+		HandleDecision(context, true, true, v3l5, v3l5);
 }
 
 function v3l5 (context) {
-	context.app.movedTemporarily(context, function v3l5_callback (result) {
-		if (result) {
-			context.setHeader("Location", result);
-			HandleDecision(context, true, true, 307, 307);
-		} else
-			HandleDecision(context, true, true, v3m5, v3m5);
-	});
+	context.app.movedTemporarily(context, v3l5_callback);
+}
+function v3l5_callback (context, result) {
+	if (result) {
+		context.setHeader("Location", result);
+		HandleDecision(context, true, true, 307, 307);
+	} else
+		HandleDecision(context, true, true, v3m5, v3m5);
 }
 
 function v3l7 (context) {
@@ -244,15 +257,17 @@ function v3m5 (context) {
 }
 
 function v3m7 (context) {
-	context.app.allowMissingPost(context, function v3m7_callback (result) {
-		HandleDecision(context, result, true, v3n11, 404);
-	});
+	context.app.allowMissingPost(context, v3m7_callback);
+}
+function v3m7_callback (context, result) {
+	HandleDecision(context, result, true, v3n11, 404);
 }
 
 function v3n5 (context) {
-	context.app.allowMissingPost(context, function v3n5_callback (result) {
-		HandleDecision(context, result, true, v3n11, 410);
-	});
+	context.app.allowMissingPost(context, v3n5_callback);
+}
+function v3n5_callback (context, result) {
+	HandleDecision(context, result, true, v3n11, 410);
 }
 
 function v3h10 (context) {
@@ -264,11 +279,12 @@ function v3h11 (context) {
 }
 
 function v3h12 (context) {
-	context.app.resourceModified(context, function v3h12_callback (result) {
-		HandleDecision(context,
-			(result > Date.parse(context.req.headers["if-unmodified-since"])),
-			true, 412, v3i12);
-	});
+	context.app.resourceModified(context, v3h12_callback);
+}
+function v3h12_callback (context, result) {
+	HandleDecision(context,
+		(result > Date.parse(context.req.headers["if-unmodified-since"])),
+		true, 412, v3i12);
 }
 
 function v3i12 (context) {
@@ -286,11 +302,12 @@ function v3j18 (context) {
 }
 
 function v3k13 (context) {
-	context.app.resourceEtag(context, function v3k13_callback (result) {
-		HandleDecision(context,
-			(context.req.headers["if-none-match"].replace("\"", "") == result),
-			true, v3j18, v3l13);
-	});
+	context.app.resourceEtag(context, v3k13_callback);
+}
+function v3k13_callback (context, result) {
+	HandleDecision(context,
+		(context.req.headers["if-none-match"].replace("\"", "") == result),
+		true, v3j18, v3l13);
 }
 
 function v3l13 (context) {
@@ -306,11 +323,12 @@ function v3l15 (context) {
 }
 
 function v3l17 (context) {
-	context.app.resourceModified(context, function v3l17_callback (result) {
-		HandleDecision(context,
-			(result > Date.parse(context.req.headers["if-modified-since"])),
-			true, v3m16, 304);
-	});
+	context.app.resourceModified(context, v3l17_callback);
+}
+function v3l17_callback (context, result) {
+	HandleDecision(context,
+		(result > Date.parse(context.req.headers["if-modified-since"])),
+		true, v3m16, 304);
 }
 
 function v3m16 (context) {
@@ -318,15 +336,17 @@ function v3m16 (context) {
 }
 
 function v3m20 (context) {
-	context.app.deleteResource(context, function v3m20_callback (result) {
-		HandleDecision(context, result, true, v3m20b, 500);
-	});
+	context.app.deleteResource(context, v3m20_callback);
+}
+function v3m20_callback (context, result) {
+	HandleDecision(context, result, true, v3m20b, 500);
 }
 
 function v3m20b (context) {
-	context.app.deleteComplete(context, function v3m20b_callback (result) {
-		HandleDecision(context, result, true, v3o20, 202);
-	});
+	context.app.deleteComplete(context, v3m20b_callback);
+}
+function v3m20b_callback (context, result) {
+	HandleDecision(context, result, true, v3o20, 202);
 }
 
 function v3n16 (context) {
@@ -334,32 +354,36 @@ function v3n16 (context) {
 }
 
 function v3n11 (context) {
-	context.app.postIsCreate(context, function v3n11_callback (result) {
-		if (result) {
-			context.app.createPath(context, function v3n11b_callback (result) {
-				if (result) {
-					//TODO: will this work or do we need to wrap the request?
-					context.req.path = result;
-					context.app.acceptContent(context, function v3n11c_callback (result) {
-						if (result) {
-							//TODO: encode_body_if_set()
-							HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
-						} else
-							HandleDecision(context, true, true, 500, 500);
-					});
-				} else
-					HandleDecision(context, true, true, 500, 500);
-			});
-		} else {
-			context.app.processPost(context, function v3n11d_callback (result) {
-				if (result) {
-					//TODO: encode_body_if_set()
-					HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
-				} else
-					HandleDecision(context, true, true, 500, 500);
-			});
-		}
-	});
+	context.app.postIsCreate(context, v3n11_callback);
+}
+function v3n11_callback (context, result) {
+	if (result) {
+		context.app.createPath(context, v3n11b_callback);
+	} else {
+		context.app.processPost(context, v3n11d_callback);
+	}
+}
+function v3n11b_callback (context, result) {
+	if (result) {
+		//TODO: will this work or do we need to wrap the request?
+		context.req.path = result;
+		context.app.acceptContent(context, v3n11c_callback);
+	} else
+		HandleDecision(context, true, true, 500, 500);
+}
+function v3n11c_callback (context, result) {
+	if (result) {
+		//TODO: encode_body_if_set()
+		HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+	} else
+		HandleDecision(context, true, true, 500, 500);
+}
+function v3n11d_callback (context, result) {
+	if (result) {
+		//TODO: encode_body_if_set()
+		HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+	} else
+		HandleDecision(context, true, true, 500, 500);
 }
 
 function v3p11 (context) {
@@ -371,62 +395,72 @@ function v3o16 (context) {
 }
 
 function v3o14 (context) {
-	context.app.isConflict(context, function v3o14_callback (result) {
+	context.app.isConflict(context, function v3o14_callback (context, result) {
 		if (!result) {
-			context.app.acceptContent(context, function v3o14b_callback (result) {
-				//TODO: if (result) encode_body_if_set()
-				HandleDecision(context, result, true, v3p11, 500);
-			});
+			context.app.acceptContent(context, v3o14b_callback);
 		} else
 			HandleDecision(context, true, true, 409, 409);
 	});
+}
+function v3o14b_callback (context, result) {
+	//TODO: if (result) encode_body_if_set()
+	HandleDecision(context, result, true, v3p11, 500);
 }
 
 function v3o18 (context) {
 	if (context.req.method == "GET" || context.req.method == "HEAD") {
 		if (context.state["accept"])
 			context.res.setHeader("Content-Type", context.state["accept"]);
-		context.app.resourceEtag(context, function v3o18_callback (result) {
-			if (result)
-				context.res.setHeader("ETag", result)
-			context.app.resourceExpiration(context, function v3o18b_callback (result) {
-				if (result)
-					context.res.setHeader("Expires", result.toUTCString());
-				context.app.resourceModified(context, function v3o18c_callback (result) {
-					if (result)
-						context.res.setHeader("Last-Modified", result.toUTCString());
-					if (context.req.method == "GET")
-						context.app.getResource(context, function v3o18d_callback (result) {
-							context.app.multipleChoices(context, function v3o18e_callback (result) {
-								//TODO: encode_body_if_set()
-								HandleDecision(context, result, true, 300, 200);
-							});
-						});
-				});
-			});
-		});
+		context.app.resourceEtag(context, v3o18_callback);
 	} else
-		context.app.multipleChoices(context, function v3o18_callback (result) {
-			HandleDecision(context, result, true, 300, 200);
-		});
+		context.app.multipleChoices(context, v3o18b_callback);
+}
+function v3o18_callback (context, result) {
+	if (result)
+		context.res.setHeader("ETag", result)
+	context.app.resourceExpiration(context, v3o18c_callback);
+}
+function v3o18b_callback (context, result) {
+	HandleDecision(context, result, true, 300, 200);
+}
+function v3o18c_callback (context, result) {
+	if (result)
+		context.res.setHeader("Expires", result.toUTCString());
+	context.app.resourceModified(context, v3o18d_callback);
+}
+function v3o18d_callback (context, result) {
+	if (result)
+		context.res.setHeader("Last-Modified", result.toUTCString());
+	if (context.req.method == "GET")
+		context.app.getResource(context, v3o18e_callback);
+}
+function v3o18e_callback (context, result) {
+	context.app.multipleChoices(context, v3o18f_callback);
+}
+function v3o18f_callback (context, result) {
+	//TODO: encode_body_if_set()
+	HandleDecision(context, result, true, 300, 200);
 }
 
 function v3o20 (context) {
-	context.app.responseEntityExists(context, function v3o20_callback (result) {
-		HandleDecision(context, result, true, v3o18, 204);
-	});
+	context.app.responseEntityExists(context, v3o20_callback);
+}
+function v3o20_callback (context, result) {
+	HandleDecision(context, result, true, v3o18, 204);
 }
 
 function v3p3 (context) {
-	context.app.isConflict(context, function v3p3_callback (result) {
-		if (!result) {
-			context.app.acceptContent(context, function v3p3b_callback (result) {
-				//TODO: if (result) encode_body_if_set()
-				HandleDecision(context, result, true, v3p11, 500);
-			});
-		} else
-			HandleDecision(context, true, true, 409, 409);
-	});
+	context.app.isConflict(context, v3p3_callback);
+}
+function v3p3_callback (context, result) {
+	if (!result) {
+		context.app.acceptContent(context, v3p3b_callback);
+	} else
+		HandleDecision(context, true, true, 409, 409);
+}
+function v3p3b_callback (context, result) {
+	//TODO: if (result) encode_body_if_set()
+	HandleDecision(context, result, true, v3p11, 500);
 }
 
 function HandleDecision (context, result, expected, match, nomatch) {
@@ -441,11 +475,12 @@ function HandleDecision (context, result, expected, match, nomatch) {
 		if (context.trace)
 			context.res.setHeader("Decision-Stack", context.stack.join(", "));
 		//TODO: implement isStreamable() to defer res.finish();
-		context.app.completeResponse(context, function (result) {
-			context.res.finish();
-		});
+		context.app.completeResponse(context, HandleDecision_callback);
 	} else
 		throw new Exception("Unhandled result type for HandleDecision()");
+}
+function HandleDecision_callback (context, result) {
+	context.res.finish();
 }
 
 function HandleRequest (server, req, res, trace) {
@@ -572,7 +607,7 @@ App.prototype.canHandleResource = function App__canHandleResource (context) {
 }
 
 App.prototype.serviceAvailable = function App__serviceAvailable (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 
 App.prototype.getKnownMethods = function App__getKnownMethods (context) {
@@ -580,7 +615,7 @@ App.prototype.getKnownMethods = function App__getKnownMethods (context) {
 }
 
 App.prototype.uriTooLong = function App__uriTooLong (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.getAllowedMethods = function App__getAllowedMethods (context) {
@@ -588,15 +623,15 @@ App.prototype.getAllowedMethods = function App__getAllowedMethods (context) {
 }
 
 App.prototype.malformedRequest = function App__malformedRequest (context, callback) { //TODO: fix Node.js bail on malformed requests
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.isAuthorized = function App__isAuthorized (context, callback) {
-	callback(true)
+	callback(context, true)
 }
 
 App.prototype.isForbidden = function App__isForbidden (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.getAuthenticationHeader = function App__getAuthenticationHeader (context) {
@@ -604,11 +639,11 @@ App.prototype.getAuthenticationHeader = function App__getAuthenticationHeader (c
 }
 
 App.prototype.validContentHeaders = function App__validContentHeaders (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 
 App.prototype.validEntityLength = function App__validEntityLength (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 
 App.prototype.getOptions = function App__getOptions (context) {
@@ -640,79 +675,79 @@ App.prototype.getVariances = function App__getVariances (context) {
 }
 
 App.prototype.resourceExists = function App__resourceExists (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 
 App.prototype.resourceEtag = function App__resourceEtag (context, callback) {
-	callback(null);
+	callback(context, null);
 }
 
 App.prototype.resourceModified = function App__resourceModified (context, callback) {
-	callback(null);
+	callback(context, null);
 }
 
 App.prototype.resourceExpiration = function App__resourceExpiration (context, callback) {
-	callback(null);
+	callback(context, null);
 }
 
 App.prototype.movedPermanently = function App__movedPermanently (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.movedTemporarily = function App__movedTemporarily (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.previouslyExisted = function App__previouslyExisted (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.allowMissingPost = function App__allowMissingPost (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.deleteResource = function App__deleteResource (context, callback) { //Deletion of resource occurs here
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.deleteComplete = function App__deleteComplete (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 
 App.prototype.responseEntityExists = function App__responseEntityExists (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.isConflict = function App__isConflict (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.postIsCreate = function App__postIsCreate (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.createPath = function App__createPath (context, callback) {
-	callback(null);
+	callback(context, null);
 }
 
 App.prototype.acceptContent = function App__acceptContent (context, callback) { //Handling of post data occurs here (and, perhaps, write body)
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.processPost = function App__processPost (context, callback) { //Handling of post data occurs here (and, perhaps, write body)
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.getResource = function App__getResource (context, callback) { //Sending of contenet for GET may occur here
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.multipleChoices = function App__multipleChoices (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 
 App.prototype.completeResponse = function App__completeResponse (context, callback) { //Sending of content for GET/POST may occur here
-	callback(true);
+	callback(context, true);
 }
 
 App.prototype.bufferResponse = function App__bufferResponse (context, callback) {
@@ -723,7 +758,7 @@ function DefaultApp () {
 }
 sys.inherits(DefaultApp, App);
 DefaultApp.prototype.serviceAvailable = function DefaultApp__serviceAvailable (context, callback) {
-	callback(false);
+	callback(context, false);
 }
 DefaultApp.prototype.canHandleResource = function DefaultApp__canHandleResource (context) {
 	return(true);

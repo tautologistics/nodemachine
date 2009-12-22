@@ -12,13 +12,13 @@ MyApp.prototype.canHandleResource = function MyApp__canHandleResource (context) 
 	return(true);
 }
 MyApp.prototype.resourceExists = function MyApp__resourceExists (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 MyApp.prototype.resourceEtag = function MyApp__resourceEtag (context, callback) {
-	callback("ajksdhasjhdgajsghdjhags");
+	callback(context, "ajksdhasjhdgajsghdjhags");
 }
 MyApp.prototype.resourceModified = function MyApp__resourceModified (context, callback) {
-	callback(new Date());
+	callback(context, new Date());
 }
 MyApp.prototype.contentTypesProvided = function MyApp__contentTypesProvided (context) {
 	return(["text/plain"]);
@@ -26,17 +26,17 @@ MyApp.prototype.contentTypesProvided = function MyApp__contentTypesProvided (con
 MyApp.prototype.resourceExpiration = function MyApp__resourceExpiration (context, callback) {
 	var exp = new Date();
 	exp.setTime(exp.getTime() + 3600000);
-	callback(exp);
+	callback(context, exp);
 }
 MyApp.prototype.getResource = function MyApp__getResource (context, callback) {
-	callback(true);
+	callback(context, true);
 }
 MyApp.prototype.completeResponse = function MyApp__completeResponse (context, callback) {
 	var limit = parseInt(context.req.uri.path.replace('/', ''));
 	function sendLoop (context, limit) {
 		context.res.sendBody("Ping: " + limit + "\n");
 		if (limit <= 0)
-			callback(true);
+			callback(context, true);
 		else
 			setTimeout(function () {
 				sendLoop(context, limit - 1);

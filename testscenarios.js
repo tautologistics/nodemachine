@@ -9,7 +9,6 @@ exports.testScenarios = [
 		headers: {},
 		checkStatus: 503,
 		checkStack: ["v3b13"],
-//		checkHeaders: null,
 //		checkBody: null
 	},
 	{
