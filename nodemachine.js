@@ -384,8 +384,8 @@ function v3o14 (context) {
 
 function v3o18 (context) {
 	if (context.req.method == "GET" || context.req.method == "HEAD") {
-		if (context.state["content-type"])
-			context.res.setHeader("Content-Type", context.state["content-type"]);
+		if (context.state["accept"])
+			context.res.setHeader("Content-Type", context.state["accept"]);
 		context.app.resourceEtag(context, function v3o18_callback (result) {
 			if (result)
 				context.res.setHeader("ETag", result)
@@ -441,15 +441,18 @@ function HandleDecision (context, result, expected, match, nomatch) {
 		if (context.trace)
 			context.res.setHeader("Decision-Stack", context.stack.join(", "));
 		//TODO: implement isStreamable() to defer res.finish();
-		context.res.finish();
+		context.app.completeResponse(context, function (result) {
+			context.res.finish();
+		});
 	} else
 		throw new Exception("Unhandled result type for HandleDecision()");
 }
 
-function HandleRequest (server, req, res, trace) {	
-	HandleDecision(
-			new Context(server.mapApp(req.uri.path), req, res, trace),
-			true, true, v3b13, v3b13);
+function HandleRequest (server, req, res, trace) {
+	var app = server.mapApp(req.uri.path);
+	var context = new Context(app, req, res, trace);
+	context.res.bufferResponse = app.bufferResponse(context);
+	HandleDecision(context, true, true, v3b13, v3b13);
 }
 
 function Server (port, host, trace) {
@@ -500,6 +503,7 @@ function Response (res) {
 	this._status = 200
 	this._headers = {};
 	this._headersSent = false;
+	this._bufferResponse = true;
 	this._buffer = [];
 }
 
@@ -508,14 +512,20 @@ Response.prototype.__defineGetter__("realResponse", function Response__getRealRe
 Response.prototype.__defineGetter__("status", function Response__getStatus () { return(this._status); });
 Response.prototype.__defineSetter__("status", function Response__setStatus (value) { if (value == parseInt(value)) { this._status = value; } });
 
+Response.prototype.__defineGetter__("bufferResponse", function Response__getBufferResponse () { return(this._bufferResponse); });
+Response.prototype.__defineSetter__("bufferResponse", function Response__setBufferResponse (value) { this._bufferResponse = !!value; });
+
 Response.prototype.sendHeader = function Response__sendHeader (statusCode, headers) {
 	return(this._res.sendHeader(statusCode, headers));
 }
 
 Response.prototype.sendBody = function Response__sendBody (chunk, encoding) {
-	//this.sendHeaders();
-	//return(this._res.sendBody(chunk, encoding));
-	this._buffer.push([chunk, encoding]);
+	if (this._bufferResponse)
+		this._buffer.push([chunk, encoding]);
+	else {
+		this.flushBody();
+		this._res.sendBody(chunk, encoding); //TODO: apply encoding method here
+	}
 }
 
 Response.prototype.sendHeaders = function Response__sendHeaders () {
@@ -525,11 +535,15 @@ Response.prototype.sendHeaders = function Response__sendHeaders () {
 	this._headersSent = true;
 }
 
-Response.prototype.finish = function Response__finish () {
+Response.prototype.flushBody = function Response__flushBody () {
 	this.sendHeaders();
 	this._buffer.forEach(function (element, index, array) {
-		this._res.sendBody(element[0], element[1]);
+		this._res.sendBody(element[0], element[1]); //TODO: apply encoding method here
 	}, this);
+}
+
+Response.prototype.finish = function Response__finish () {
+	this.flushBody();
 	return(this._res.finish());
 }
 
@@ -681,20 +695,28 @@ App.prototype.createPath = function App__createPath (context, callback) {
 	callback(null);
 }
 
-App.prototype.acceptContent = function App__acceptContent (context, callback) { //Handling of post data occurs here (and write body)
+App.prototype.acceptContent = function App__acceptContent (context, callback) { //Handling of post data occurs here (and, perhaps, write body)
 	callback(false);
 }
 
-App.prototype.processPost = function App__processPost (context, callback) { //Handling of post data occurs here (and write body)
+App.prototype.processPost = function App__processPost (context, callback) { //Handling of post data occurs here (and, perhaps, write body)
 	callback(false);
 }
 
-App.prototype.getResource = function App__getResource (context, callback) { //Sending of contenet for GET occurs here
+App.prototype.getResource = function App__getResource (context, callback) { //Sending of contenet for GET may occur here
 	callback(false);
 }
 
 App.prototype.multipleChoices = function App__multipleChoices (context, callback) {
 	callback(false);
+}
+
+App.prototype.completeResponse = function App__completeResponse (context, callback) { //Sending of content for GET/POST may occur here
+	callback(true);
+}
+
+App.prototype.bufferResponse = function App__bufferResponse (context, callback) {
+	return(true);
 }
 
 function DefaultApp () {
