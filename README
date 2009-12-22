@@ -6,7 +6,11 @@ To test:
 
   node runtests.js
 
-To run example server:
+To run the simple example server:
 
-  node example01.js
+  node example-simple.js
+
+To run the streaming example server:
+
+  node example-stream.js
 
