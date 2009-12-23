@@ -318,8 +318,98 @@ exports.testScenarios = [
 		checkStatus: 412,
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7"],
 	},
+	{
+		name: "v3h7 false",
+		appConfig: { canHandleResource: true, resourceExists: false, previouslyExisted: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 404,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7", "v3i7", "v3k7", "v3l7"],
+	},
 //	{//TODO
-//		name: "v3h7 false",
+//		name: "v3i4 true",
+//	},
+//	{//TODO
+//		name: "v3i4 false",
+//	},
+	{
+		name: "v3i7 false",
+		appConfig: { canHandleResource: true, resourceExists: false, previouslyExisted: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 404,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7", "v3i7", "v3k7", "v3l7"],
+	},
+//	{//TODO
+//		name: "v3i7 true",
+//	},
+//	{//TODO
+//		name: "v3k5 true",
+//	},
+//	{//TODO
+//		name: "v3k5 false",
+//	},
+	{
+		name: "v3k7 false",
+		appConfig: { canHandleResource: true, resourceExists: false, previouslyExisted: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 404,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7", "v3i7", "v3k7", "v3l7"],
+	},
+//	{//TODO
+//		name: "v3k7 true",
+//	},
+//	{//TODO
+//		name: "v3l5 true",
+//	},
+//	{//TODO
+//		name: "v3l5 false",
+//	},
+	{
+		name: "v3l7 false",
+		appConfig: { canHandleResource: true, resourceExists: false, previouslyExisted: false },
+		method: "GET",
+		path: "/",
+		headers: { },
+		checkStatus: 404,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7", "v3i7", "v3k7", "v3l7"],
+	},
+//	{//TODO
+//		name: "v3l7 true",
+//	},
+//	{//TODO
+//		name: "v3m5 true",
+//	},
+//	{//TODO
+//		name: "v3m5 false",
+//	},
+	{
+		name: "v3m7 false",
+		appConfig: { canHandleResource: true, resourceExists: false, getAllowedMethods: ["POST"], previouslyExisted: false },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 404,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7", "v3i7", "v3k7", "v3l7", "v3m7"],
+	},
+	{
+		name: "v3m7 true",
+		appConfig: { canHandleResource: true, resourceExists: false, getAllowedMethods: ["POST"], previouslyExisted: false, allowMissingPost: true, postIsCreate: true, createPath: "/", acceptContent: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 303,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3h7", "v3i7", "v3k7", "v3l7", "v3m7", "v3n11"],
+	},
+//	{//TODO
+//		name: "v3n5 true",
+//	},
+//	{//TODO
+//		name: "v3n5 false",
 //	},
 	{
 		name: "v3g7 true",
@@ -521,7 +611,7 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3n16 true",
-		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], processPost: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: true, createPath: "/", acceptContent: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
 		method: "POST",
 		path: "/",
 		headers: { },
@@ -530,16 +620,46 @@ exports.testScenarios = [
 	},
 	{
 		name: "v3n11 true",
-		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], processPost: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: true, createPath: "/", acceptContent: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
 		method: "POST",
 		path: "/",
 		headers: { },
 		checkStatus: 303,
 		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3n11"],
 	},
+	{
+		name: "v3n11 false",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: false, processPost: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 201,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3n11", "v3p11"],
+	},
 //	{//TODO
-//		name: "v3n11 false",
+//		name: "v3p3 true",
 //	},
+//	{//TODO
+//		name: "v3p3 false",
+//	},
+	{
+		name: "v3p11 true",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: false, processPost: function (context) { context.res.setHeader("Location", "/foo"); return(true) } },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 201,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3n11", "v3p11"],
+	},
+	{
+		name: "v3p11 false",
+		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false, getAllowedMethods: ['POST'], postIsCreate: false, processPost: function (context) { return(true) } },
+		method: "POST",
+		path: "/",
+		headers: { },
+		checkStatus: 204,
+		checkStack: ["v3b13", "v3b12", "v3b11", "v3b10", "v3b9", "v3b8", "v3b7", "v3b6", "v3b5", "v3b4", "v3b3", "v3c3", "v3d4", "v3e5", "v3f6", "v3g7", "v3g8", "v3h10", "v3i12", "v3l13", "v3m16", "v3n16", "v3n11", "v3p11", "v3o20"],
+	},
 	{
 		name: "v3o16 false",
 		appConfig: { canHandleResource: true, deleteResource: true, deleteComplete: false },

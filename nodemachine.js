@@ -381,7 +381,8 @@ function v3n11c_callback (context, result) {
 function v3n11d_callback (context, result) {
 	if (result) {
 		//TODO: encode_body_if_set()
-		HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+//		HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+		HandleDecision(context, true, true, v3p11, v3p11);
 	} else
 		HandleDecision(context, true, true, 500, 500);
 }
