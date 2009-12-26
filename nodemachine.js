@@ -213,7 +213,7 @@ function v3i4 (context) {
 }
 function v3i4_callback (context, result) {
 	if (result) {
-		context.setHeader("Location", result);
+		context.res.setHeader("Location", result);
 		HandleDecision(context, true, true, 301, 301);
 	} else
 		HandleDecision(context, true, true, v3p3, v3p3);
@@ -231,7 +231,7 @@ function v3k5 (context) {
 }
 function v3k5_callback (context, result) {
 	if (result) {
-		context.setHeader("Location", result);
+		context.res.setHeader("Location", result);
 		HandleDecision(context, true, true, 301, 301);
 	} else
 		HandleDecision(context, true, true, v3l5, v3l5);
@@ -242,7 +242,7 @@ function v3l5 (context) {
 }
 function v3l5_callback (context, result) {
 	if (result) {
-		context.setHeader("Location", result);
+		context.res.setHeader("Location", result);
 		HandleDecision(context, true, true, 307, 307);
 	} else
 		HandleDecision(context, true, true, v3m5, v3m5);
