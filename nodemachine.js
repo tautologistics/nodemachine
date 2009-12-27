@@ -374,7 +374,13 @@ function v3n11b_callback (context, result) {
 function v3n11c_callback (context, result) {
 	if (result) {
 		//TODO: encode_body_if_set()
-		HandleDecision(context, (context.res.getHeader("Location") != null), true, 303, v3p11);
+		
+		if (context.app.redirectAfterPost(context)) {
+			HandleDecision(context,(context.res.getHeader('Location') != null), true, 303, 500);
+		} else {
+			HandleDecision(context, false, true, null, v3p11);
+		}
+	
 	} else
 		HandleDecision(context, true, true, 500, 500);
 }
@@ -752,6 +758,10 @@ App.prototype.completeResponse = function App__completeResponse (context, callba
 }
 
 App.prototype.bufferResponse = function App__bufferResponse (context, callback) {
+	return(true);
+}
+
+App.prototype.redirectAfterPost = function App__redirectAfterPost (context, callback) {
 	return(true);
 }
 
