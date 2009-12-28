@@ -378,7 +378,7 @@ function v3n11c_callback (context, result) {
 		if (context.app.redirectAfterPost(context)) {
 			HandleDecision(context,(context.res.getHeader('Location') != null), true, 303, 500);
 		} else {
-			HandleDecision(context, false, true, null, v3p11);
+			HandleDecision(context, true, true, v3p11, v3p11);
 		}
 	
 	} else
