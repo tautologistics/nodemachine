@@ -1,5 +1,6 @@
 var sys = require('sys');
 var http = require('http');
+var url = require('url');
 //var repl = require('repl');
 var nodemachine = require('./nodemachine');
 
@@ -32,7 +33,8 @@ MyApp.prototype.getResource = function MyApp__getResource (context, callback) {
 	callback(context, true);
 }
 MyApp.prototype.completeResponse = function MyApp__completeResponse (context, callback) {
-	var limit = parseInt(context.req.uri.path.replace('/', ''));
+	context.req.uri = url.parse(context.req.url);
+	var limit = parseInt(context.req.uri.pathname.replace('/', ''));
 	function sendLoop (context, limit) {
 		context.res.sendBody("Ping: " + limit + "\n");
 		if (limit <= 0)

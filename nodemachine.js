@@ -1,5 +1,6 @@
 var sys = require("sys");
 var http = require("http");
+var url = require('url');
 
 function v3b13 (context) {
 	context.app.serviceAvailable(context, v3b13_callback)
@@ -366,7 +367,7 @@ function v3n11_callback (context, result) {
 function v3n11b_callback (context, result) {
 	if (result) {
 		//TODO: will this work or do we need to wrap the request?
-		context.req.path = result;
+		context.req.pathname = result;
 		context.app.acceptContent(context, v3n11c_callback);
 	} else
 		HandleDecision(context, true, true, 500, 500);
@@ -491,7 +492,8 @@ function HandleDecision_callback (context, result) {
 }
 
 function HandleRequest (server, req, res, trace) {
-	var app = server.mapApp(req.uri.path);
+	req.uri = url.parse(req.url);
+	var app = server.mapApp(req.uri.pathname);
 	var context = new Context(app, req, res, trace);
 	context.res.bufferResponse = app.bufferResponse(context);
 	HandleDecision(context, true, true, v3b13, v3b13);
