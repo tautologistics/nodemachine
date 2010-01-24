@@ -44,10 +44,21 @@ server.start();
 
 var testClient = http.createClient(serverPort, serverHost);
 
+var failedTests = {};
+
 function runTest(currentTest) {
 	if (currentTest >= testScenarios.length) {
+		var failedCount = 0;
+		var failedList = [];
+		for (var key in failedTests) {
+			failedCount++;
+			failedList.push(key);
+		}
 		sys.puts("Done testing");
-		process.exit(0);
+		sys.puts("Tests passed: " + (currentTest - failedCount));
+		sys.puts("Tests failed: " + failedCount + (failedCount ? (" (" + failedList.join(', ') + ")") : ""));
+		
+		process.exit(failedCount ? 1 : 0);
 	}
 
 	var testScenario = testScenarios[currentTest];
@@ -64,16 +75,24 @@ function runTest(currentTest) {
 			body += chunk;
 		});
 		response.addListener("complete", function () {
-			if (!((testScenario.checkBody == null) || testScenario.checkBody(body)))
+			if (!((testScenario.checkBody == null) || testScenario.checkBody(body))) {
+				failedTests[testScenario.name] = 1;
 				sys.puts("    Bad body");
+			}
 			runTest(currentTest + 1);
 		});
-		if (testScenario.checkStatus != response.statusCode)
+		if (testScenario.checkStatus != response.statusCode) {
+			failedTests[testScenario.name] = 1;
 			sys.puts("    Bad status. " + testScenario.checkStatus + " : " + response.statusCode);
-		if (testScenario.checkStack.join(', ') != response.headers["decision-stack"])
+		}
+		if (testScenario.checkStack.join(', ') != response.headers["decision-stack"]) {
+			failedTests[testScenario.name] = 1;
 			sys.puts("    Bad stack. " + testScenario.checkStack.join(', ') + " : " + response.headers["decision-stack"]);
-		if (!((testScenario.checkHeaders == null) || testScenario.checkHeaders(response.headers)))
+		}
+		if (!((testScenario.checkHeaders == null) || testScenario.checkHeaders(response.headers))) {
+			failedTests[testScenario.name] = 1;
 			sys.puts("    Bad headers");
+		}
 	});
 }
 
