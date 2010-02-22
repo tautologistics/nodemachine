@@ -568,7 +568,7 @@ Response.prototype.sendBody = function Response__sendBody (chunk, encoding) {
 		this._buffer.push([chunk, encoding]);
 	else {
 		this.flushBody();
-		this._res.sendBody(chunk, encoding); //TODO: apply encoding method here
+		this._res.write(chunk, encoding); //TODO: apply encoding method here
 	}
 }
 
@@ -582,13 +582,14 @@ Response.prototype.sendHeaders = function Response__sendHeaders () {
 Response.prototype.flushBody = function Response__flushBody () {
 	this.sendHeaders();
 	this._buffer.forEach(function (element, index, array) {
-		this._res.sendBody(element[0], element[1]); //TODO: apply encoding method here
+		this._res.write(element[0], element[1]); //TODO: apply encoding method here
 	}, this);
 }
 
 Response.prototype.finish = function Response__finish () {
 	this.flushBody();
-	return(this._res.finish());
+	//return(this._res.finish());
+	return(this._res.close());
 }
 
 Response.prototype.setHeader = function Response__setHeader (name, value) {

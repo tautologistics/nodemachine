@@ -35,5 +35,7 @@ server.trace = true;
 server.addApp(new MyApp());
 server.start();
 
+sys.puts("Ready for requests @ http://localhost:" + serverPort + "/");
+
 //repl.start();
 

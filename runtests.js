@@ -69,12 +69,13 @@ function runTest(currentTest) {
 	sys.puts("Running test [" + (currentTest + 1) + "] " + testScenario.name);
 	
 	var body = '';
-	request.finish(function (response) {
+//	request.finish(function (response) {
+	request.addListener("response", function (response) {
 		response.setBodyEncoding("utf8");
-		response.addListener("body", function (chunk) {
+		response.addListener("data", function (chunk) {
 			body += chunk;
 		});
-		response.addListener("complete", function () {
+		response.addListener("end", function () {
 			if (!((testScenario.checkBody == null) || testScenario.checkBody(body))) {
 				failedTests[testScenario.name] = 1;
 				sys.puts("    Bad body");
@@ -94,6 +95,7 @@ function runTest(currentTest) {
 			sys.puts("    Bad headers");
 		}
 	});
+	request.close();
 }
 
 runTest(0);
