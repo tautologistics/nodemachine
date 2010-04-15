@@ -1,6 +1,6 @@
 var sys = require('sys');
 
-exports.testScenarios = [
+exports.tests = [
 	{
 		name: "v3b13 false",
 		appConfig: { canHandleResource: true, serviceAvailable: false },

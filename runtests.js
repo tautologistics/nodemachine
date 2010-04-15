@@ -1,7 +1,7 @@
 var sys = require('sys');
 var http = require('http');
 var nodemachine = require('./nodemachine');
-process.mixin(GLOBAL, require("./testscenarios"));
+var testscenarios = require("./testscenarios");
 
 var serverPort = 8080;
 var serverHost = "localhost";
@@ -47,7 +47,7 @@ var testClient = http.createClient(serverPort, serverHost);
 var failedTests = {};
 
 function runTest(currentTest) {
-	if (currentTest >= testScenarios.length) {
+	if (currentTest >= testscenarios.tests.length) {
 		var failedCount = 0;
 		var failedList = [];
 		for (var key in failedTests) {
@@ -61,7 +61,7 @@ function runTest(currentTest) {
 		process.exit(failedCount ? 1 : 0);
 	}
 
-	var testScenario = testScenarios[currentTest];
+	var testScenario = testscenarios.tests[currentTest];
 	var request = testClient.request(testScenario.method.toUpperCase(), testScenario.path, testScenario.headers);
 	server.clearApps();
 	server.addApp(new TestApp(testScenario.appConfig));
