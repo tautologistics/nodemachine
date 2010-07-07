@@ -1,0 +1,23 @@
+{
+	  "name": "nodemachine"
+	, "description": "Port of WebMachine"
+	, "version": "0.2.5"
+	, "author": "Chris Winberry <chris@winberry.net>"
+	, "contributors": []
+	, "repository": {
+		  "type": "git"
+		, "url": "git://github.com/tautologistics/nodemachine.git"
+	}
+	, "bugs": {
+		  "mail": "chris@winberry.net"
+		, "web": "http://github.com/tautologistics/nodemachine/issues"
+	}
+	, "os": [ "linux", "darwin", "freebsd" ]
+	, "directories": { "lib": "./lib/" }
+	, "main": "./lib/nodemachine"
+	, "engines": { "node": ">=0.1.33" }
+	, "licenses": [{
+		  "type": "MIT"
+		, "url": "http://github.com/tautologistics/nodemachine/raw/master/LICENSE"
+	}]
+}
