@@ -1,6 +1,6 @@
 var sys = require('sys');
 var http = require('http');
-var nodemachine = require('./nodemachine');
+var nodemachine = require('./lib/nodemachine');
 var testscenarios = require("./testscenarios");
 
 var serverPort = 8080;
@@ -95,7 +95,7 @@ function runTest(currentTest) {
 			sys.puts("    Bad headers");
 		}
 	});
-	request.close();
+	request.end();
 }
 
 runTest(0);
