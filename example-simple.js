@@ -1,7 +1,7 @@
 var sys = require('sys');
 var http = require('http');
 //var repl = require('repl');
-var nodemachine = require('./nodemachine');
+var nodemachine = require('./lib/nodemachine');
 
 var serverPort = 8080;
 

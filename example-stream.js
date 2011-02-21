@@ -2,7 +2,7 @@ var sys = require('sys');
 var http = require('http');
 var url = require('url');
 //var repl = require('repl');
-var nodemachine = require('./nodemachine');
+var nodemachine = require('./lib/nodemachine');
 
 var serverPort = 8080;
 
@@ -55,7 +55,7 @@ server.trace = true;
 server.addApp(new MyApp());
 server.start();
 
-sys.puts("Ready for requests @ http://localhost:" + serverPort + "/");
+sys.puts("Ready for requests @ http://localhost:" + serverPort + "/5");
 
 //repl.start();
 
