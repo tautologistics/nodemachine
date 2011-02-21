@@ -71,7 +71,7 @@ function runTest(currentTest) {
 	var body = '';
 //	request.finish(function (response) {
 	request.addListener("response", function (response) {
-		response.setBodyEncoding("utf8");
+		response.setEncoding("utf8");
 		response.addListener("data", function (chunk) {
 			body += chunk;
 		});
