@@ -1,4 +1,4 @@
-var sys = require('sys');
+var util = require('util');
 var http = require('http');
 var nodemachine = require('./lib/nodemachine');
 var testscenarios = require("./testscenarios");
@@ -14,9 +14,9 @@ Test.prototype.__defineGetter__("Foo", function () { return(this._fun); });
 Test.prototype.__defineSetter__("Foo", function (value) { this._fun = value; });
 
 var test = new Test();
-sys.debug(test.Foo());
+util.debug(test.Foo());
 test.Foo = function () { return(2); }
-sys.debug(test.Foo());
+util.debug(test.Foo());
 */
 
 function TestApp (overrides) {
@@ -54,9 +54,9 @@ function runTest(currentTest) {
 			failedCount++;
 			failedList.push(key);
 		}
-		sys.puts("Done testing");
-		sys.puts("Tests passed: " + (currentTest - failedCount));
-		sys.puts("Tests failed: " + failedCount + (failedCount ? (" (" + failedList.join(', ') + ")") : ""));
+		util.puts("Done testing");
+		util.puts("Tests passed: " + (currentTest - failedCount));
+		util.puts("Tests failed: " + failedCount + (failedCount ? (" (" + failedList.join(', ') + ")") : ""));
 		
 		process.exit(failedCount ? 1 : 0);
 	}
@@ -66,7 +66,7 @@ function runTest(currentTest) {
 	server.clearApps();
 	server.addApp(new TestApp(testScenario.appConfig));
 	
-	sys.puts("Running test [" + (currentTest + 1) + "] " + testScenario.name);
+	util.puts("Running test [" + (currentTest + 1) + "] " + testScenario.name);
 	
 	var body = '';
 //	request.finish(function (response) {
@@ -78,21 +78,21 @@ function runTest(currentTest) {
 		response.addListener("end", function () {
 			if (!((testScenario.checkBody == null) || testScenario.checkBody(body))) {
 				failedTests[testScenario.name] = 1;
-				sys.puts("    Bad body");
+				util.puts("    Bad body");
 			}
 			runTest(currentTest + 1);
 		});
 		if (testScenario.checkStatus != response.statusCode) {
 			failedTests[testScenario.name] = 1;
-			sys.puts("    Bad status. " + testScenario.checkStatus + " : " + response.statusCode);
+			util.puts("    Bad status. " + testScenario.checkStatus + " : " + response.statusCode);
 		}
 		if (testScenario.checkStack.join(', ') != response.headers["decision-stack"]) {
 			failedTests[testScenario.name] = 1;
-			sys.puts("    Bad stack. " + testScenario.checkStack.join(', ') + " : " + response.headers["decision-stack"]);
+			util.puts("    Bad stack. " + testScenario.checkStack.join(', ') + " : " + response.headers["decision-stack"]);
 		}
 		if (!((testScenario.checkHeaders == null) || testScenario.checkHeaders(response.headers))) {
 			failedTests[testScenario.name] = 1;
-			sys.puts("    Bad headers");
+			util.puts("    Bad headers");
 		}
 	});
 	request.end();
